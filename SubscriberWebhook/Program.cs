@@ -47,7 +47,7 @@ public class Program
         var youtubeService = new YouTubeService(new BaseClientService.Initializer()
         {
             ApiKey = ConfigurationManager.AppSettings.Get("YtApiKey"),
-            ApplicationName = "YoutubeGet"
+            ApplicationName = ConfigurationManager.AppSettings.Get("YtApiName")
         });
 
         var channels = ConfigurationManager.AppSettings.Get("Channels");
