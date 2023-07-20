@@ -39,5 +39,5 @@ Get subscriber count of one or multiple channels, and outputs it as a Discord We
 ```
 
 ## Depedencies
-Google.Apis.Youtube.v3
+Google.Apis.Youtube.v3  
 Discord.Net
