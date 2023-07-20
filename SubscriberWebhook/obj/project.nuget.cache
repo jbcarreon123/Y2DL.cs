@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "dgSpecHash": "ygZY1HZLFQsEsJTlCpboW3kGIATHqgte362Xh7Qq4ezIDpDKT6LkKzvps7YMUrHnVls916bh0+0QgacBx//cCQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jbcarreon123\\RiderProjects\\SubscriberWebhook\\SubscriberWebhook\\SubscriberWebhook.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net\\3.11.0\\discord.net.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.commands\\3.11.0\\discord.net.commands.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.core\\3.11.0\\discord.net.core.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.interactions\\3.11.0\\discord.net.interactions.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.rest\\3.11.0\\discord.net.rest.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.webhook\\3.11.0\\discord.net.webhook.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\discord.net.websocket\\3.11.0\\discord.net.websocket.3.11.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\google.apis\\1.61.0\\google.apis.1.61.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\google.apis.auth\\1.61.0\\google.apis.auth.1.61.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\google.apis.core\\1.61.0\\google.apis.core.1.61.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\google.apis.youtube.v3\\1.61.0.3113\\google.apis.youtube.v3.1.61.0.3113.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.collections.immutable\\5.0.0\\system.collections.immutable.5.0.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0-preview.6.23329.7\\system.configuration.configurationmanager.8.0.0-preview.6.23329.7.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0-preview.6.23329.7\\system.diagnostics.eventlog.8.0.0-preview.6.23329.7.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.interactive.async\\5.0.0\\system.interactive.async.5.0.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.linq.async\\5.0.0\\system.linq.async.5.0.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.reactive\\5.0.0\\system.reactive.5.0.0.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0-preview.6.23329.7\\system.security.cryptography.protecteddata.8.0.0-preview.6.23329.7.nupkg.sha512",
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
