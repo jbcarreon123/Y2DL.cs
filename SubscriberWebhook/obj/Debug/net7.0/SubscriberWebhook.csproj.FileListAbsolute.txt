@@ -1,5 +1,4 @@
 C:\Users\jbcarreon123\RiderProjects\SubscriberWebhook\SubscriberWebhook\bin\Debug\net7.0\SubscriberWebhook.exe
-C:\Users\jbcarreon123\RiderProjects\SubscriberWebhook\SubscriberWebhook\bin\Debug\net7.0\SubscriberWebhook.dll.config
 C:\Users\jbcarreon123\RiderProjects\SubscriberWebhook\SubscriberWebhook\bin\Debug\net7.0\SubscriberWebhook.deps.json
 C:\Users\jbcarreon123\RiderProjects\SubscriberWebhook\SubscriberWebhook\bin\Debug\net7.0\SubscriberWebhook.runtimeconfig.json
 C:\Users\jbcarreon123\RiderProjects\SubscriberWebhook\SubscriberWebhook\bin\Debug\net7.0\SubscriberWebhook.dll

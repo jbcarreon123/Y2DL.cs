@@ -2,10 +2,12 @@
 using Discord.Webhook;
 using System.Configuration;
 using System.Collections.Specialized;
+using System.Reflection;
 using Discord;
 using Google.Apis.Services;
 using Google.Apis.YouTube;
 using Google.Apis.YouTube.v3;
+using Newtonsoft.Json.Linq;
 
 namespace SubscriberWebhook;
 
@@ -15,9 +17,9 @@ public class Program
     
     public static async Task Main(string[] args)
     {
-        Console.WriteLine("Subscriber Discord Webhook v0.1");
+        Console.WriteLine("Subscriber Discord Webhook v1.0");
         
-        webhookClient = new DiscordWebhookClient(ConfigurationManager.AppSettings.Get("DiscordWebhookToken"));
+        webhookClient = new DiscordWebhookClient(AppConfig.discordWebhookToken);
 
         try
         {
@@ -25,7 +27,7 @@ public class Program
             {
                 var channelInfos = await Run();
                 await PostToWebhook(channelInfos);
-                await Task.Delay(int.Parse(ConfigurationManager.AppSettings.Get("UpdateInterval")) * 1000);
+                await Task.Delay(AppConfig.updateInterval);
             }
         }
         catch (AggregateException ex)
@@ -46,11 +48,11 @@ public class Program
         
         var youtubeService = new YouTubeService(new BaseClientService.Initializer()
         {
-            ApiKey = ConfigurationManager.AppSettings.Get("YtApiKey"),
-            ApplicationName = ConfigurationManager.AppSettings.Get("YtApiName")
+            ApiKey = AppConfig.ytApiKey,
+            ApplicationName = AppConfig.ytApiName
         });
 
-        var channels = ConfigurationManager.AppSettings.Get("Channels");
+        var channels = AppConfig.channels;
 
         List<ChannelInfo> channelInfos = new List<ChannelInfo>();
 
@@ -62,8 +64,7 @@ public class Program
         foreach (var c in channelResponse.Items)
         {
             ChannelInfo channelInfo = new ChannelInfo();
-
-            channelInfo.ChannelName = c.Snippet.Title;
+            
             channelInfo.SubscriberCount = (long?)c.Statistics.SubscriberCount ?? -1;
 
             EmbedFieldBuilder embedFieldBuilder = new EmbedFieldBuilder();
@@ -78,7 +79,7 @@ public class Program
         return channelInfos;
     }
 
-    private static ulong Message = ulong.Parse(ConfigurationManager.AppSettings.Get("WebhookMessageIdOverride"));
+    private static ulong Message = AppConfig.webhookMessageIdOverride;
 
     private static async Task PostToWebhook(List<ChannelInfo> channelInfos)
     {
@@ -97,9 +98,21 @@ public class Program
             await webhookClient.ModifyMessageAsync(Message, x => x.Embeds = new List<Embed> { embedBuilder.Build() });
     }
 
+    public static class AppConfig
+    {
+        private static string json = System.IO.File.ReadAllText("appsettings.json");
+        private static JObject configObject = JObject.Parse(json);
+
+        public static string ytApiKey = (string)configObject["YtApiKey"];
+        public static string ytApiName = (string)configObject["YtApiName"];
+        public static string discordWebhookToken = (string)configObject["DiscordWebhookToken"];
+        public static string channels = (string)configObject["Channels"];
+        public static int updateInterval = (int)configObject["UpdateInterval"] * 1000;
+        public static ulong webhookMessageIdOverride = (ulong)configObject["WebhookMessageIdOverride"];
+    }
+
     public class ChannelInfo
     {
-        public string ChannelName;
         public long SubscriberCount;
         public EmbedFieldBuilder Field;
     }
