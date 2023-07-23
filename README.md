@@ -1,6 +1,9 @@
 # YoutubeSubCountToDiscord
 Get subscriber count of one or multiple channels, and outputs it as a Discord Webhook.
 
+## Generate JSON file for this app
+https://jbcarreon123.github.io/YTSCTD-JSONGenerator.html
+
 ## Default config
 ```json
 {
