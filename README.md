@@ -31,9 +31,15 @@ Get subscriber count of one or multiple channels, and outputs it as a Discord We
   // To make it work and make sure the program won't crash, use an ID of a message that the webhook created.
   // To get the message ID, enable Developer Mode on advanced settings in Discord, right-click the webhook's message, and click Copy Message ID.
   // https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-  "WebhookMessageIdOverride": 0 
-}
+  "WebhookMessageIdOverride": 0,
 
+  // Destination of the CSV file. Default: "" (disabled)
+  // NOTE: This will only update the file once per interval.
+  "CSVFileDestination": "",
+
+  // Forcely assume that the file exists and the data only needs to be appended?
+  "ForceAppendCSV": false
+}
 ```
 
 ## Depedencies
