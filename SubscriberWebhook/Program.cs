@@ -96,6 +96,32 @@ public class Program
                 username: "YT Subscribers");
         else
             await webhookClient.ModifyMessageAsync(Message, x => x.Embeds = new List<Embed> { embedBuilder.Build() });
+
+        if (AppConfig.UpdateCSVFile)
+            ToCsv(channelInfos, AppConfig.CSVFileDestination);
+    }
+
+    public static bool NeedsToBeAppended = !AppConfig.ForceAppendCSV;
+
+    public static void ToCsv(List<ChannelInfo> Data, string CsvPath)
+    {
+        Console.WriteLine("Writing to the CSV file...");
+        
+        if (NeedsToBeAppended)
+        {
+            File.WriteAllText(CsvPath, $"Date,{String.Join(",", Data.OrderByDescending(a => a.SubscriberCount).Select(x => x.Field.Name))}\r\n");
+            NeedsToBeAppended = false;
+        }
+
+        try
+        {
+            File.AppendAllText(CsvPath,
+                $"{DateTimeOffset.UtcNow.ToUnixTimeSeconds()},{String.Join(",", Data.OrderByDescending(a => a.SubscriberCount).Select(x => x.SubscriberCount))}\r\n");
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine("An error occured while writing. {0}", e.Message);
+        }
     }
 
     public static class AppConfig
@@ -107,8 +133,11 @@ public class Program
         public static string ytApiName = (string)configObject["YtApiName"];
         public static string discordWebhookToken = (string)configObject["DiscordWebhookToken"];
         public static string channels = (string)configObject["Channels"];
-        public static int updateInterval = (int)configObject["UpdateInterval"] * 1000;
-        public static ulong webhookMessageIdOverride = (ulong)configObject["WebhookMessageIdOverride"];
+        public static int updateInterval = Convert.ToInt32(configObject["UpdateInterval"]) * 1000;
+        public static ulong webhookMessageIdOverride = Convert.ToUInt64(configObject["WebhookMessageIdOverride"]);
+        public static bool UpdateCSVFile = !String.IsNullOrWhiteSpace((string)configObject["CSVFileDestination"]);
+        public static string CSVFileDestination = (string)configObject["CSVFileDestination"];
+        public static bool ForceAppendCSV = (bool)configObject["ForceAppendCSV"];
     }
 
     public class ChannelInfo

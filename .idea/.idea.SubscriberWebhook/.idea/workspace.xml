@@ -7,14 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6276b9a8-c266-41c3-a80d-efd0bfa57586" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/SubscriberWebhook/appsettings.json" afterDir="false" />
+    <list default="true" id="6276b9a8-c266-41c3-a80d-efd0bfa57586" name="Changes" comment="1.0">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SubscriberWebhook/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SubscriberWebhook/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SubscriberWebhook.sln" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SubscriberWebhook/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/SubscriberWebhook.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/ref/SubscriberWebhook.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/ref/SubscriberWebhook.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/refint/SubscriberWebhook.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/Debug/net7.0/refint/SubscriberWebhook.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/SubscriberWebhook.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/SubscriberWebhook.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/SubscriberWebhook.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/SubscriberWebhook.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/project.nuget.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SubscriberWebhook/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/SubscriberWebhook/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,6 +62,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -99,6 +104,9 @@
       <workItem from="1689823540888" duration="6570000" />
       <workItem from="1689830215912" duration="19000" />
       <workItem from="1689830240671" duration="364000" />
+      <workItem from="1690036392168" duration="713000" />
+      <workItem from="1690068796095" duration="2824000" />
+      <workItem from="1690086851426" duration="785000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -108,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1689830360860</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="1.0">
+      <option name="closed" value="true" />
+      <created>1689833568803</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1689833568805</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +134,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.0" />
   </component>
 </project>
