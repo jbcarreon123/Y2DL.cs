@@ -15,6 +15,8 @@ Also, the statistics is now extended, with videos, and views.  It now also have 
 In Verbose mode, it now shows the channel's image, the latest video's thumbnail, and the channel's description.
 #### Notes about Simple and Verbose Modes
 In each of them, it costs 2 quota units per channel per interval to show the latest video.
+#### Also,
+If you want to take down your channel in the examples, send me an email at `jbcarreon212@gmail.com` (make sure it is marked as important!)
 
 ## Default config
 ```json
