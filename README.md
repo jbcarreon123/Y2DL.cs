@@ -1,9 +1,33 @@
 # YoutubeSubCountToDiscord
 Get subscriber count of one or multiple channels, and outputs it as a Discord Webhook.
 
+## Embed modes
+### Basic Mode
+![Basic mode Example](Images/BasicModeExample.png)  
+In Basic mode, the thing shown is only the channel name, and the subscriber count.  
+Useful for subscriber comparisons, or like shown in the example (subscribe to [Netherverse](https://youtube.com/@netherverseyt), [Zenith](https://youtube.com/@zenithjj), and [Mongoose](https://youtube.com/@mongoose.). First one to reach 10k wins.), for subscriber races.
+### Simple Mode
+![Simple Mode Example](Images/SimpleModeExample.png)  
+In Simple Mode, each channel now gets it's own embed, and it now shows their latest video.  
+Also, the statistics is now extended, with videos, and views.  It now also have clickable links.
+### Verbose Mode
+![Verbose Mode Example](Images/VerboseModeExample2.png)  
+In Verbose mode, it now shows the channel's image, the latest video's thumbnail, and the channel's description.
+#### Notes about Simple and Verbose Modes
+In each of them, it costs 2 quota units per channel per interval to show the latest video.
+
 ## Default config
 ```json
 {
+  // Embed Mode. Default: "SIMPLE"
+  // BASIC = Only 1 embed, and shows only the channel name, and the subscriber count.
+  // SIMPLE = 1 embed each channel, and shows the channel name, the statistics (subscribers, videos, and views),
+  // and the latest video and it's statistics.
+  // VERBOSE = Like simple mode, but with description, and images of both the channel, and the latest video.
+  // Note that both SIMPLE and VERBOSE mode also costs (aside from the interval quota cost of 1 per interval)
+  // 2 quota units per channel per interval to get the latest video, and it's statistics.
+  "Mode": "VERBOSE",
+
   // Your YouTube API key. For security purposes, I won't add my API key here.
   // https://developers.google.com/youtube/v3/getting-started
   "YtApiKey": "[INSERT API KEY HERE]",
@@ -22,8 +46,9 @@ Get subscriber count of one or multiple channels, and outputs it as a Discord We
   // This also accepts channels that you don't own.
   "Channels": "[CHANNEL 1 ID HERE],[CHANNEL 2 ID HERE]",
 
-  // What is the delay of updating the channels? Default: 300 seconds (5 minutes, 388 requests).
+  // What is the delay of updating the channels? Default: 300 seconds (5 minutes, 388 requests on BASIC).
   // Accepts seconds. 1 minute = 60 seconds.
+  // On SIMPLE and VERBOSE mode, it costs 1 unit per interval (to get the channel's info) + 2 units per channel per interval (to get the latest video).
   // Please note that YouTube API has a quota limit of 10000 per day, and each request of this program costs 1 quota.
   "UpdateInterval": 300,
 
@@ -31,12 +56,18 @@ Get subscriber count of one or multiple channels, and outputs it as a Discord We
   // To make it work and make sure the program won't crash, use an ID of a message that the webhook created.
   // To get the message ID, enable Developer Mode on advanced settings in Discord, right-click the webhook's message, and click Copy Message ID.
   // https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-  "WebhookMessageIdOverride": 0 
-}
+  "WebhookMessageIdOverride": 0,
 
+  // Destination of the CSV file. Default: "" (disabled)
+  // NOTE: This will only update the file once per interval.
+  "CSVFileDestination": "",
+
+  // Forcely assume that the file exists and the data only needs to be appended?
+  "ForceAppendCSV": false
+}
 ```
 
-## Depedencies
+## Dependencies
 Google.Apis.Youtube.v3  
-Discord.Net
+Discord.Net  
 Newtonsoft.Json

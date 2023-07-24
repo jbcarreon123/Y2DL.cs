@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PfjQg9N/bdvfGSUwHN8mGnQ8tRNxZl9iIPNSTS/43nl/lHFvOVsukTNTz7bciN9lVJj97zf8OkkZYZ5TCtNYAA==",
+  "dgSpecHash": "MCnLw2ttHE1/TCN7C9JuqhPfwN8zneOAIzqPQohg67O/qf3trhS+9As69+RcbHxH6FYIJx8TV7CAIGGMktvLFA==",
   "success": true,
   "projectFilePath": "C:\\Users\\jbcarreon123\\RiderProjects\\SubscriberWebhook\\SubscriberWebhook\\SubscriberWebhook.csproj",
   "expectedPackageFiles": [
@@ -24,10 +24,7 @@
     "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.linq.async\\5.0.0\\system.linq.async.5.0.0.nupkg.sha512",
     "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.reactive\\5.0.0\\system.reactive.5.0.0.nupkg.sha512",
     "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0-preview.6.23329.7\\system.security.cryptography.protecteddata.8.0.0-preview.6.23329.7.nupkg.sha512",
-    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
-    "C:\\Users\\jbcarreon123\\.nuget\\packages\\microsoft.netcore.app.runtime.osx-arm64\\7.0.7\\microsoft.netcore.app.runtime.osx-arm64.7.0.7.nupkg.sha512",
-    "C:\\Users\\jbcarreon123\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.osx-arm64\\7.0.7\\microsoft.aspnetcore.app.runtime.osx-arm64.7.0.7.nupkg.sha512",
-    "C:\\Users\\jbcarreon123\\.nuget\\packages\\microsoft.netcore.app.host.osx-arm64\\7.0.7\\microsoft.netcore.app.host.osx-arm64.7.0.7.nupkg.sha512"
+    "C:\\Users\\jbcarreon123\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }
