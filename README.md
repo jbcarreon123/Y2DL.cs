@@ -19,8 +19,8 @@ In each of them, it costs 2 quota units per channel per interval to show the lat
 If you want to take down your channel in the examples, send me an email at `jbcarreon212@gmail.com` (make sure it is marked as important!)
 
 ## Limitations
-In Basic mode, it is limited to 25 channels. That's because a single Discord embed can only contain 25 fields.
-In both Simple and Verbose modes, it is limited to 10 channels. That's because a single Discord webhook message can only contains 10 embeds.
+In Basic mode, it is limited to 25 channels. That's because a single Discord embed can only contain 25 fields.  
+In both Simple and Verbose modes, it is limited to 10 channels. That's because a single Discord webhook message can only contains 10 embeds.  
 See this: https://discord.com/safety/using-webhooks-and-embeds
 
 ## Default config
