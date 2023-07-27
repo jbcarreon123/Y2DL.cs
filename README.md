@@ -1,6 +1,9 @@
 # YoutubeSubCountToDiscord
 Get subscriber count of one or multiple channels, and outputs it as a Discord Webhook.
 
+## YouTube tutorial
+[![Tutorial](http://img.youtube.com/vi/BT2Y8DAEKMk/0.jpg)](http://www.youtube.com/watch?v=BT2Y8DAEKMk)
+
 ## Embed modes
 ### Basic Mode
 ![Basic mode Example](Images/BasicModeExample.png)  
