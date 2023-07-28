@@ -81,3 +81,8 @@ See this: https://discord.com/safety/using-webhooks-and-embeds
 Google.Apis.Youtube.v3  
 Discord.Net  
 Newtonsoft.Json
+
+## Disclaimer
+YouTube is a trademark by Google Inc., and  
+Discord is a trademark by Discord Inc.
+This program isn't endorsed or affiliated by Google or Discord.
