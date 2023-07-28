@@ -84,5 +84,5 @@ Newtonsoft.Json
 
 ## Disclaimer
 YouTube is a trademark by Google Inc., and  
-Discord is a trademark by Discord Inc.
+Discord is a trademark by Discord Inc.  
 This program isn't endorsed or affiliated by Google or Discord.
