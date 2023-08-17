@@ -1,9 +1,7 @@
-<div style="text-align: center;">
-<br>
-<image src="images/y2dl-flat.png" height="100"><br>
-<div style="font-size: 30px; font-weight: bold;">YouTube2DiscordLink</div><br>
+<p align="center"><img src="/Images/y2dl-flat.png" height="100" /></p>
+
+# YouTube2DiscordLink
 Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.
-</div>
 
 ## Basically work in progress right now.
 
