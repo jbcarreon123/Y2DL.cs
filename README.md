@@ -1,6 +1,6 @@
 <p align="center"><img src="/Images/y2dl-flat.png" height="100" /></p>
 
-# YouTube2DiscordLink
+# YouTube2DiscordLink (formerly YTSCTD)
 Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.
 
 ## Basically work in progress right now.
