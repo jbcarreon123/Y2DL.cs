@@ -5,7 +5,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.0.0</Version>
+        <Version>2.0.0-b1</Version>
         <Title>YouTube2DiscordLink</Title>
         <Authors>jbcarreon123</Authors>
         <PackageProjectUrl>https://github.com/jbcarreon123/Y2DL</PackageProjectUrl>
@@ -30,9 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\" />
-      <Folder Include="Config\" />
-      <Folder Include="Database\" />
       <Folder Include="Images\" />
     </ItemGroup>
 

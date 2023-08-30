@@ -46,6 +46,17 @@ public class CommandInterface
 
     private async Task HandleInteraction(SocketInteraction arg)
     {
+        if (!Program.Config.Services.Commands.Enabled)
+        {
+            await arg.RespondAsync(embed:
+                new EmbedBuilder()
+                    .WithTitle("Commands service is disabled.")
+                    .WithDescription("Enable it in the config.")
+                    .WithColor(Color.Red)
+                    .Build(), ephemeral: true);
+            return;
+        }
+        
         try
         {
             SocketInteractionContext ctx = new SocketInteractionContext(_client, arg);

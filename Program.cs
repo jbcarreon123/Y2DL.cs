@@ -19,7 +19,7 @@ public class Program
 {
     public static Config Config = LoadConfigFile("Config/Y2DLConfig.yml");
     public static (List<(Message, Output)>, List<(Message, Output)>) WebhookClients { get; set; }
-    public static List<(Channels, IChannel)> VoiceChannels { get; set; }
+    public static List<(VoiceChannels, SocketGuildChannel, string)> VoiceChannels { get; set; }
     public static DatabaseManager Database = new DatabaseManager("Database/Database.db3");
     private static DiscordSocketClient _client { get; set; }
     private static CancellationTokenSource _cancellationTokenSource { get; set; }
@@ -57,9 +57,14 @@ public class Program
         }
 
         await Database.Initialize();
-        _youtubeService = new YoutubeService(Config.Main.YoutubeApiKey, Config.Main.YoutubeApiName);
+        _youtubeService = new YoutubeService(Config.Main.ApiKeys[0].YoutubeApiKey, Config.Main.ApiKeys[0].YoutubeApiName);
 
         await Task.Delay(-1);
+    }
+
+    public static SocketSelfUser GetCurrentUser()
+    {
+        return _client.CurrentUser;
     }
 
     private static async Task InitializeBot()
@@ -68,31 +73,28 @@ public class Program
             AlwaysDownloadUsers = true,
             MaxWaitBetweenGuildAvailablesBeforeReady = (int)new TimeSpan(0, 0, 15).TotalMilliseconds,
             MessageCacheSize = 100,
-            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
-            LogLevel = (LogSeverity)Config.Main.LogLevel
+            GatewayIntents = GatewayIntents.GuildMessages | GatewayIntents.Guilds,
+            LogLevel = (LogSeverity)Config.Main.Logging.LogLevel
         };
         _client = new DiscordSocketClient(config);
         _client.Log += Log;
         _client.Ready += Ready;
-        _client.LoggedOut += () =>
+        _client.Disconnected += (e) =>
         {
             _cancellationTokenSource.Cancel();
             return Task.CompletedTask;
         };
-        _client.LoggedIn += async () =>
+        _client.Connected += async () =>
         {
             if (_botReady)
             {
                 _cancellationTokenSource = new CancellationTokenSource();
                 var cancellationToken = _cancellationTokenSource.Token;
 
-                await DynamicChannelInfoService.Run(cancellationToken, _youtubeService);
+                await LoopService.Run(cancellationToken, _youtubeService);
             }
         };
-        _client.MessageDeleted += async (cacheable, cacheable1) =>
-        {
-            Database.Remove(cacheable.Id);
-        };
+        _client.MessageDeleted += async (cacheable, cacheable1) => { Database.Remove(cacheable.Id); };
         await _client.LoginAsync(TokenType.Bot, Config.Main.BotConfig.BotToken);
         await _client.StartAsync();
         
@@ -105,7 +107,7 @@ public class Program
         _botReady = true;
 
         WebhookClients = InitializeMessageBasedServices();
-        
+
         if (Config.Services.Commands.Enabled)
             await _commands.GetInteractionService().RegisterCommandsGloballyAsync(true);
 
@@ -125,7 +127,7 @@ public class Program
 
         async void Action()
         {
-            await DynamicChannelInfoService.Run(cancellationToken, _youtubeService);
+            await LoopService.Run(cancellationToken, _youtubeService);
         }
 
         var DataInThread = new Thread(Action)
@@ -135,7 +137,12 @@ public class Program
         DataInThread.Start();
     }
 
-    public static SocketTextChannel GetChannel(ulong guildId, ulong channelId)
+    public static SocketTextChannel GetTextChannel(ulong guildId, ulong channelId)
+    {
+        return _client.GetGuild(guildId).GetTextChannel(channelId);
+    }
+    
+    public static SocketTextChannel GetVoiceChannel(ulong guildId, ulong channelId)
     {
         return _client.GetGuild(guildId).GetTextChannel(channelId);
     }
@@ -152,7 +159,7 @@ public class Program
             {
                 dyn.Add(
                     message.Output.UseWebhook
-                        ? (message, new Output(new DiscordWebhookClient(message.Output.WebhookUrl)))
+                        ? (message, new Output(new DiscordWebhookClient(message.Output.WebhookUrl), message.Output.ChannelId))
                         : (message,
                             new Output(message.Output.GuildId, message.Output.ChannelId))
                 );
@@ -164,9 +171,9 @@ public class Program
         {
             foreach (Message message in Config.Services.ChannelReleases.Messages)
             {
-                dyn.Add(
+                chn.Add(
                     message.Output.UseWebhook
-                        ? (message, new Output(new DiscordWebhookClient(message.Output.WebhookUrl)))
+                        ? (message, new Output(new DiscordWebhookClient(message.Output.WebhookUrl), message.Output.ChannelId))
                         : (message,
                             new Output(message.Output.GuildId, message.Output.ChannelId))
                 );
@@ -179,20 +186,20 @@ public class Program
         return (dyn, chn);
     }
 
-    public static List<(Channels, IChannel)> InitializeChannels()
+    public static List<(VoiceChannels, SocketGuildChannel, string)> InitializeChannels()
     {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         
-        List<(Channels, IChannel)> chn = new List<(Channels, IChannel)>();
-        if (Config.Services.ChannelReleases.Enabled)
+        List<(VoiceChannels, SocketGuildChannel, string)> chn = new List<(VoiceChannels, SocketGuildChannel, string)>();
+        if (Config.Services.DynamicChannelInfoForVoiceChannels.Enabled)
         {
             foreach (Channels channel in Config.Services.DynamicChannelInfoForVoiceChannels.Channels)
             {
                 foreach (VoiceChannels voiceChannel in channel.VoiceChannels)
                 {
                     chn.Add(
-                        (channel, _client.GetGuild(voiceChannel.GuildId).GetChannel(voiceChannel.ChannelId))
+                        (voiceChannel, _client.GetGuild(voiceChannel.GuildId).GetChannel(voiceChannel.ChannelId), channel.ChannelId)
                     );
                 }
             }
@@ -204,7 +211,7 @@ public class Program
         return chn;
     }
 
-    public static Task Log(LogMessage message)
+    public static async Task Log(LogMessage message)
     {
         Console.WriteLine(
             $"{DateTime.Now:MM/dd/yy hh:mm:ss tt} | " +
@@ -213,8 +220,35 @@ public class Program
             $"{(String.IsNullOrWhiteSpace(message.Message)? message.Exception.Message : message.Message)}" +
             $"{(message.Exception is not null? $" | {message.Exception}" : "")}"
         );
-        
-        return Task.CompletedTask;
+
+        if (message.Severity is LogSeverity.Error or LogSeverity.Critical or LogSeverity.Warning)
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{message.Severity.ToString()} | {message.Source}",
+                Description = $"{message.Message}"
+            };
+            if (message.Exception is not null)
+            {
+                embed.AddField("Exception", $"```\r\n{message.Exception}\r\n```");
+            }
+
+            if (Config.Main.Logging.LogErrorChannel.UseWebhook)
+            {
+                var webhook = new DiscordWebhookClient(Config.Main.Logging.LogErrorChannel.WebhookUrl);
+                await webhook.SendMessageAsync(embeds: new[]
+                {
+                    embed.Build()                
+                });
+            }
+            else
+            {
+                await GetTextChannel(Config.Main.Logging.LogErrorChannel.GuildId, Config.Main.Logging.LogErrorChannel.ChannelId).SendMessageAsync(embeds: new[]
+                {
+                    embed.Build()                
+                });
+            }
+        }
     }
 
     public static Config LoadConfigFile(string path)
@@ -230,9 +264,10 @@ public class Program
 
     public class Output
     {
-        public Output(DiscordWebhookClient webhook)
+        public Output(DiscordWebhookClient webhook, ulong channelId)
         {
             Webhook = webhook;
+            ChannelId = channelId;
         }
 
         public Output(ulong guildId, ulong channelId)
