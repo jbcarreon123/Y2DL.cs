@@ -56,7 +56,7 @@ Services:
           # Only used in Webhook mode, or if you set UseWebhook to true.
           WebhookUrl: [YOUR DISCORD WEBHOOK URL]
 		  # Used in both
-		  ChannelId: 0
+          ChannelId: 0
           # The thing below is only used in Bot mode.
           GuildId: 0
           
@@ -91,8 +91,8 @@ Services:
           UseWebhook: false
           # Only used in Webhook mode, or if you set UseWebhook to true.
           WebhookUrl: [YOUR DISCORD WEBHOOK URL]
-		  # Used in both
-		  ChannelId: 0
+          # Used in both
+          ChannelId: 0
           # The 2 things below is only used in Bot mode.
           GuildId: 0
         Content: "@everyone"
@@ -129,5 +129,5 @@ Services:
         Author: "{Name}"
         AuthorAvatarUrl: "{AvatarUrl}"
         Fields:
-          - Name: "Bot Owner"
-            Value: "<@908002848967626842>"
+          - Name: "Just a bot."
+            Value: "Yeah."
