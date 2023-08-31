@@ -4,7 +4,7 @@
 Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.
 
 ## Screenshot (DynamicVoiceChannelInfo service, and /about y2dl)
-![image](https://github.com/jbcarreon123/Y2DL/assets/86447165/6b8c4e36-e32a-4517-a9d4-bf8baec8423e)
+![image](https://github.com/jbcarreon123/Y2DL/assets/86447165/dafd454e-3545-4306-8433-7349a8770980)
 
 ## Currently in beta!
 But, if you want to see updates, and have a idea for a feature of Y2DL,
