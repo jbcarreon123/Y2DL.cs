@@ -2,7 +2,7 @@
 <a href="https://jbcarreon123.github.io/docs/y2dl/faq">FAQ</a></p>
 
 # YouTube2DiscordLink (formerly YTSCTD)
-Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.
+Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.   
 **Note that this is NOT a YouTube Downloader.**
 
 ## Screenshot (DynamicVoiceChannelInfo service, and /about y2dl)
@@ -71,11 +71,10 @@ Services:
           UseWebhook: false
           # Only used in Webhook mode, or if you set UseWebhook to true.
           WebhookUrl: [YOUR DISCORD WEBHOOK URL]
-		  # Used in both
+          # Used in both
           ChannelId: 0
           # The thing below is only used in Bot mode.
           GuildId: 0
-          
         Embed:
           Title: "{Name} ({Handle})"
           TitleUrl: "{ChannelUrl}"
