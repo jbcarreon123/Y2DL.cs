@@ -12,6 +12,11 @@ Gets channel info from one or multiple channels, and sends it on a Text channel 
 But, if you want to see updates, and have a idea for a feature of Y2DL,
 you can go to my discord at https://discord.gg/P5ecFZNyCc, in the #y2dl channel.
 
+## Demos
+There is **2** Discord servers that has Y2DL:
+- My server (https://discord.gg/P5ecFZNyCc)
+- *Zacronium Official* (https://discord.gg/65Q3k3RMKx)
+
 ## Config file
 ```yaml
 # YouTube2DiscordLink (formerly YTSCTD) 2.0.0
