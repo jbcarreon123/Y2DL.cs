@@ -15,7 +15,13 @@ you can go to my discord at https://discord.gg/P5ecFZNyCc, in the #y2dl channel.
 ## Demos
 There is **2** Discord servers that has Y2DL:
 - My server (https://discord.gg/P5ecFZNyCc)
+  - DynamicChannelInfo
+  - DynamicVoiceChannelInfo
+  - ChannelReleases
 - *Zacronium Official* (https://discord.gg/65Q3k3RMKx)
+  - DynamicChannelInfo
+  - DynamicVoiceChannelInfo
+  - ChannelReleases
 
 ## Config file
 ```yaml
