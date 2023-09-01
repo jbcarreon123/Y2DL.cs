@@ -1,7 +1,9 @@
-<p align="center"><img src="/Images/y2dl-flat.png" height="100" /></p>
+<p align="center"><img src="/Images/y2dl-flat.png" height="100" /><br />
+<a href="https://jbcarreon123.github.io/docs/y2dl/faq">FAQ</a></p>
 
 # YouTube2DiscordLink (formerly YTSCTD)
 Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.
+**Note that this is NOT a YouTube Downloader.**
 
 ## Screenshot (DynamicVoiceChannelInfo service, and /about y2dl)
 ![image](https://github.com/jbcarreon123/Y2DL/assets/86447165/dafd454e-3545-4306-8433-7349a8770980)
