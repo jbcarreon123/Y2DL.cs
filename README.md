@@ -1,6 +1,7 @@
-<img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="Images/Y2DL.png">  
+<img width="275" height="275" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="Images/Y2DL.png">  
 
 # YouTube2DiscordLink (formerly YTSCTD)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/jbcarreon123/Y2DL/dotnet.yml) ![GitHub all releases](https://img.shields.io/github/downloads/jbcarreon123/Y2DL/total) [![Discord](https://img.shields.io/discord/1135815464891732089)](https://discord.gg/P5ecFZNyCc)
 ### [FAQ](https://jbcarreon123.github.io/docs/y2dl/faq) | [Getting started (coming soon)](https://jbcarreon123.github.io/docs/y2dl/getting-started)
 Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel.   
 **Note that this is NOT a YouTube Downloader.**
