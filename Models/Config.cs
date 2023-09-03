@@ -46,8 +46,13 @@ public class BotConfig
 public class BotStatus
 {
     public bool Enabled { get; set; }
-    public string? Emoji { get; set; }
-    public string? Text { get; set; }
+    public List<BotCustomStatus>? Status { get; set; }
+}
+
+public class BotCustomStatus
+{
+    public string Emoji { get; set; }
+    public string Text { get; set; }
 }
 
 public class Services
