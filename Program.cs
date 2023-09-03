@@ -6,6 +6,7 @@ using Discord.Interactions;
 using Discord.Net;
 using Discord.Webhook;
 using Discord.WebSocket;
+using Google.Apis.YouTube.v3;
 using Y2DL.Models;
 using YamlDotNet.Serialization.Converters;
 using Y2DL.Services;
@@ -20,9 +21,9 @@ public class Program
     public static Config Config = LoadConfigFile("Config/Y2DLConfig.yml");
     public static (List<(Message, Output)>, List<(Message, Output)>) WebhookClients { get; set; }
     public static List<(VoiceChannels, SocketGuildChannel, string)> VoiceChannels { get; set; }
-    public static DatabaseManager Database = new DatabaseManager("Database/Database.db3");
+    public static DatabaseManager Database = new DatabaseManager("Database.db3");
+    public static int LogoutThreshold = 0;
     private static DiscordSocketClient _client { get; set; }
-    private static CancellationTokenSource _cancellationTokenSource { get; set; }
     private static CommandInterface _commands { get; set; }
     private static bool _botReady = false;
     private static YoutubeService _youtubeService { get; set; }
@@ -66,6 +67,11 @@ public class Program
     {
         return _client.CurrentUser;
     }
+    
+    public static DiscordSocketClient GetCurrentUserClient()
+    {
+        return _client;
+    }
 
     private static async Task InitializeBot()
     {
@@ -79,32 +85,39 @@ public class Program
         _client = new DiscordSocketClient(config);
         _client.Log += Log;
         _client.Ready += Ready;
-        _client.Disconnected += (e) =>
+        _client.Disconnected += async (e) =>
         {
-            _cancellationTokenSource.Cancel();
-            return Task.CompletedTask;
+            await Log(new LogMessage(LogSeverity.Error, "Discord", "Client disconnected", e));
+            LoopService.CancelTask = true;
         };
         _client.Connected += async () =>
         {
             if (_botReady)
             {
-                _cancellationTokenSource = new CancellationTokenSource();
-                var cancellationToken = _cancellationTokenSource.Token;
+                async void Action()
+				{
+					LoopService.CancelTask = false;
+					await LoopService.Run(_youtubeService);
+				}
 
-                await LoopService.Run(cancellationToken, _youtubeService);
+				var DataInThread = new Thread(Action)
+				{
+					IsBackground = true
+				};
+				DataInThread.Start();
             }
         };
         _client.MessageDeleted += async (cacheable, cacheable1) => { Database.Remove(cacheable.Id); };
         await _client.LoginAsync(TokenType.Bot, Config.Main.BotConfig.BotToken);
         await _client.StartAsync();
-        
-        _commands = new CommandInterface(_client, new InteractionService(_client.Rest));
-        await _commands.InitializeAsync();
     }
 
     private static async Task Ready()
     {
         _botReady = true;
+        
+        _commands = new CommandInterface(_client, new InteractionService(_client.Rest));
+        await _commands.InitializeAsync();
 
         WebhookClients = InitializeMessageBasedServices();
 
@@ -115,19 +128,11 @@ public class Program
             VoiceChannels = InitializeChannels();
 
         await _client.SetStatusAsync((UserStatus)Config.Main.BotConfig.State);
-        if (Config.Main.BotConfig.Status.Enabled)
-        {
-            var status = Config.Main.BotConfig.Status.Emoji + " " ?? "";
-            status += Config.Main.BotConfig.Status.Text ?? "";
-            await _client.SetCustomStatusAsync(status);
-        }
-
-        _cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = _cancellationTokenSource.Token;
 
         async void Action()
         {
-            await LoopService.Run(cancellationToken, _youtubeService);
+            LoopService.CancelTask = false;
+            await LoopService.Run(_youtubeService);
         }
 
         var DataInThread = new Thread(Action)
@@ -135,6 +140,11 @@ public class Program
             IsBackground = true
         };
         DataInThread.Start();
+    }
+    
+    public static YoutubeService GetYoutubeService()
+    {
+        return _youtubeService;
     }
 
     public static SocketTextChannel GetTextChannel(ulong guildId, ulong channelId)
@@ -228,10 +238,6 @@ public class Program
                 Title = $"{message.Severity.ToString()} | {message.Source}",
                 Description = $"{message.Message}"
             };
-            if (message.Exception is not null)
-            {
-                embed.AddField("Exception", $"```\r\n{message.Exception}\r\n```");
-            }
 
             if (Config.Main.Logging.LogErrorChannel.UseWebhook)
             {

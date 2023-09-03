@@ -14,11 +14,9 @@ public class DynamicChannelInfoService
 
     public static async Task Run(YouTubeChannel channel, (Message, Program.Output) message)
     {
-        var hash = Hashing.HashClassToSHA256String(message.Item1);
-
-        if (await _databaseManager.Exists(hash, message.Item2.ChannelId))
+        if (await _databaseManager.Exists(channel.Id, message.Item2.ChannelId))
         {
-            var chnl = await _databaseManager.Get(hash, message.Item2.ChannelId);
+            var chnl = await _databaseManager.Get(channel.Id, message.Item2.ChannelId);
 
             if (!message.Item1.Output.UseWebhook)
             {
@@ -55,7 +53,7 @@ public class DynamicChannelInfoService
 
                 await _databaseManager.Add(message.Item1.Output.ChannelId, new Database()
                 {
-                    MessageHash = hash,
+                    ChannelId = channel.Id,
                     MessageId = msg.Id
                 });
 
@@ -74,7 +72,7 @@ public class DynamicChannelInfoService
 
                 await _databaseManager.Add(message.Item1.Output.ChannelId, new Database()
                 {
-                    MessageHash = hash,
+                    ChannelId = channel.Id,
                     MessageId = msg
                 });
             }

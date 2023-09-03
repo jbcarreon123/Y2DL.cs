@@ -2,6 +2,12 @@
 
 namespace Y2DL.Models;
 
+public class UpdatedChannels
+{
+    public string Id { get; set; }
+    public YouTubeChannel Channel { get; set; }
+}
+
 public class YouTubeChannel
 {
     public string Name { get; set; } = "";

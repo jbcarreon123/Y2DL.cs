@@ -1,4 +1,8 @@
 ﻿using System.Data.SQLite;
+using Discord;
+using Discord.Rest;
+using Discord.Webhook;
+using Discord.WebSocket;
 using Y2DL.Models;
 using Y2DL.Utils;
 
@@ -10,8 +14,6 @@ public class DatabaseManager
 
     public DatabaseManager(string filePath)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-        
         database = new SQLiteConnection(new SQLiteConnectionStringBuilder()
         {
             DataSource = filePath,
@@ -33,11 +35,13 @@ public class DatabaseManager
             using (SQLiteCommand command = database.CreateCommand())
             {
                 command.CommandText =
-                    "CREATE TABLE IF NOT EXISTS 'DynamicChannelInfo' ('ChannelId' INTEGER, 'MessageId' INTEGER, 'Hash' TEXT, PRIMARY KEY('ChannelId' AUTOINCREMENT));";
+                    "CREATE TABLE IF NOT EXISTS 'DynamicChannelInfo' ('ChannelId' INTEGER, 'MessageId' INTEGER, 'YouTubeChannelId' TEXT, 'Hash' TEXT, PRIMARY KEY('Hash'));";
                 await command.ExecuteNonQueryAsync();
             }
         }
-        catch (SQLiteException ex) { }
+        catch (SQLiteException ex) { 
+			await Program.Log(new LogMessage(LogSeverity.Warning, "Database", "Database has thrown a exception", ex));
+		}
         catch (Exception ex) { }
         finally
         {
@@ -52,11 +56,13 @@ public class DatabaseManager
             await DatabaseManager.database.OpenAsync();
             using (SQLiteCommand command = database.CreateCommand())
             {
-                command.CommandText = $"INSERT INTO 'DynamicChannelInfo' VALUES ({ChannelId}, {db.MessageId}, '{db.MessageHash}');";
+                command.CommandText = $"INSERT INTO 'DynamicChannelInfo' VALUES ({ChannelId}, {db.MessageId}, '{db.ChannelId}', '{Hashing.HashThingToSHA256String(ChannelId + db.MessageId + db.ChannelId)}');";
                 await command.ExecuteNonQueryAsync();
             }
         }
-        catch (SQLiteException ex) { }
+        catch (SQLiteException ex) { 
+			await Program.Log(new LogMessage(LogSeverity.Warning, "Database", "Database has thrown a exception", ex));
+		}
         catch (Exception ex) { }
         finally
         {
@@ -64,7 +70,7 @@ public class DatabaseManager
         }
     }
     
-    public async Task<ulong> Get(string messageHash, ulong channelId)
+    public async Task<ulong> Get(string ytChannelId, ulong channelId)
     {
         ulong num = 0;
         try
@@ -72,7 +78,7 @@ public class DatabaseManager
             await DatabaseManager.database.OpenAsync();
             using (SQLiteCommand cmd = database.CreateCommand())
             {
-                cmd.CommandText = $"SELECT * FROM 'DynamicChannelInfo' WHERE 'DynamicChannelInfo'.'Hash' == '{messageHash}' AND 'DynamicChannelInfo'.'ChannelId' == {channelId}";
+                cmd.CommandText = $"SELECT * FROM 'DynamicChannelInfo' WHERE 'DynamicChannelInfo'.'YouTubeChannelId' == '{ytChannelId}' AND 'DynamicChannelInfo'.'ChannelId' == {channelId}";
                 var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
@@ -81,7 +87,9 @@ public class DatabaseManager
                 }
             }
         }
-        catch (SQLiteException ex) { }
+        catch (SQLiteException ex) { 
+			await Program.Log(new LogMessage(LogSeverity.Warning, "Database", "Database has thrown a exception", ex));
+		}
         catch (Exception ex) { }
         finally
         {
@@ -90,7 +98,7 @@ public class DatabaseManager
         return num;
     }
 
-    public async Task<bool> Exists(string messageHash, ulong channelId)
+    public async Task<bool> Exists(string ytChannelId, ulong channelId)
     {
         bool exists = false;
         try
@@ -98,11 +106,13 @@ public class DatabaseManager
             await DatabaseManager.database.OpenAsync();
             using (SQLiteCommand cmd = database.CreateCommand())
             {
-                cmd.CommandText = $"SELECT * FROM 'DynamicChannelInfo' WHERE 'DynamicChannelInfo'.'Hash' == '{messageHash}' AND 'DynamicChannelInfo'.'ChannelId' == {channelId}";
+                cmd.CommandText = $"SELECT * FROM 'DynamicChannelInfo' WHERE 'DynamicChannelInfo'.'YouTubeChannelId' == '{ytChannelId}' AND 'DynamicChannelInfo'.'ChannelId' == {channelId}";
                 exists = await cmd.ExecuteScalarAsync() != null;
             }
         }
-        catch (SQLiteException ex) { }
+        catch (SQLiteException ex) { 
+			await Program.Log(new LogMessage(LogSeverity.Warning, "Database", "Database has thrown a exception", ex));
+		}
         catch (Exception ex) { }
         finally
         {
@@ -123,7 +133,9 @@ public class DatabaseManager
                 var reader = await command.ExecuteNonQueryAsync();
             }
         }
-        catch (SQLiteException ex) { }
+        catch (SQLiteException ex) { 
+			await Program.Log(new LogMessage(LogSeverity.Warning, "Database", "Database has thrown a exception", ex));
+		}
         catch (Exception ex) { }
         finally { await database.CloseAsync(); }
     }

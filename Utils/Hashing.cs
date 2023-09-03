@@ -5,7 +5,7 @@ namespace Y2DL.Utils;
 
 public class Hashing
 {
-    public static string HashClassToSHA256String(object obj)
+    public static string HashThingToSHA256String(object obj)
     {
         using (SHA256 sha256 = SHA256.Create())
         {
