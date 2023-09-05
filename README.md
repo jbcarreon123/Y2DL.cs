@@ -28,12 +28,12 @@ There is **2** Discord servers that has Y2DL:
 
 ## Config file
 ```yaml
-# YouTube2DiscordLink (formerly YTSCTD) 2.0.0
+# YouTube2DiscordLink (formerly YTSCTD) 2.0.0-rc1
 # Config File
 # For smooth operation, follow the instructions at https://jbcarreon123.github.io/docs/y2dl
 
 # DO NOT TOUCH THIS!
-Version: 2.0.0-b1
+Version: 2.0.0-rc1
 
 Main:
   # Webhook or Bot
@@ -46,8 +46,9 @@ Main:
     State: DoNotDisturb
     Status:
       Enabled: true
-      Emoji: 🔗
-      Text: jbcarreon123.github.io/y2dl
+      Status:
+       - Emoji: 🔗
+         Text: jbcarreon123.github.io/y2dl
 
   WebhookConfig:
     Name: Y2DL Relay Webhook
