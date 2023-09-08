@@ -11,7 +11,10 @@ namespace Y2DL.Utils;
 
 public class YamlStringEnumConverter : IYamlTypeConverter
 {
-    public bool Accepts(Type type) => type.IsEnum;
+    public bool Accepts(Type type)
+    {
+        return type.IsEnum;
+    }
 
     public object ReadYaml(IParser parser, Type type)
     {
@@ -20,12 +23,10 @@ public class YamlStringEnumConverter : IYamlTypeConverter
             .Select(m =>
                 new KeyValuePair<string, MemberInfo>(
                     m.GetCustomAttributes<EnumMemberAttribute>(true).Select(ema => ema.Value).FirstOrDefault(), m))
-            .Where(pa => !String.IsNullOrEmpty(pa.Key)).ToDictionary(pa => pa.Key, pa => pa.Value);
+            .Where(pa => !string.IsNullOrEmpty(pa.Key)).ToDictionary(pa => pa.Key, pa => pa.Value);
         if (!serializableValues.ContainsKey(parsedEnum.Value))
-        {
             throw new YamlException(parsedEnum.Start, parsedEnum.End,
                 $"Value '{parsedEnum.Value}' not found in enum '{type.Name}'");
-        }
 
         return Enum.Parse(type, serializableValues[parsedEnum.Value].Name);
     }

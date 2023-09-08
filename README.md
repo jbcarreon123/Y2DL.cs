@@ -11,7 +11,7 @@ Gets channel info from one or multiple channels, and sends it on a Text channel 
 ![DynamicChannelInfo](https://github.com/jbcarreon123/Y2DL/assets/86447165/8e1abee6-bd37-4ac7-81c8-8d75d02f71d0)
 ![ChannelReleases](https://github.com/jbcarreon123/Y2DL/assets/86447165/7e38660d-77cc-45ab-bdef-f560df83a8cb)
 
-## Currently in beta!
+## Currently in release candidate state!
 But, if you want to see updates, and have a idea for a feature of Y2DL,
 you can go to my discord at https://discord.gg/P5ecFZNyCc, in the #y2dl channel.
 
@@ -164,6 +164,7 @@ Services:
 ```
 
 ## Disclaimer
+
 YouTube is a trademark by Google Inc., and  
 Discord is a trademark by Discord Inc.  
 This program isn't endorsed or affiliated by Google or Discord.

@@ -5,29 +5,33 @@ namespace Y2DL.Models;
 public class UpdatedChannels
 {
     public string Id { get; set; }
-    public YouTubeChannel Channel { get; set; }
+    public YoutubeChannel Channel { get; set; }
 }
 
-public class YouTubeChannel
+public class YoutubeChannel
 {
     public string Name { get; set; } = "";
     public string Id { get; set; } = "";
     public string Description { get; set; } = "";
     public string Handle { get; set; } = "";
     public string ChannelAvatarUrl { get; set; } = "";
-    public LatestVideo? LatestVideo { get; set; } = new LatestVideo();
-    public Statistics? Statistics { get; set; } = new Statistics();
+    public LatestVideo? LatestVideo { get; set; } = new();
+    public Statistics? Statistics { get; set; } = new();
     private string? channelUrl { get; set; } = "";
-    private long created { get; set; } = 0;
+    private long created { get; set; }
+
     public DateTimeOffset DateCreated
     {
         get => DateTimeOffset.FromUnixTimeMilliseconds(created);
         set => created = value.ToUnixTimeMilliseconds();
     }
+
     public string? ChannelUrl
     {
         get => channelUrl;
-        set => channelUrl = value.ToCharArray()[0] == '@' ? $"https://youtube.com/{value}" : $"https://youtube.com/channel/{value}";
+        set => channelUrl = value.ToCharArray()[0] == '@'
+            ? $"https://youtube.com/{value}"
+            : $"https://youtube.com/channel/{value}";
     }
 }
 
@@ -39,7 +43,7 @@ public class LatestVideo
     public string? Thumbnail { get; set; } = "";
     public string? Duration { get; set; } = "";
     public DateTimeOffset PublishedAt { get; set; } = DateTimeOffset.MinValue;
-    public Statistics? Statistics { get; set; } = new Statistics();
+    public Statistics? Statistics { get; set; } = new();
 }
 
 public class Statistics
@@ -50,24 +54,13 @@ public class Statistics
     public ulong Subscribers { get; set; } = 0;
     public ulong Videos { get; set; } = 0;
 
-    public string? FormattedSubscribers
-    {
-        get => Subscribers.ToFormattedNumber();
-    }
-    public string? FormattedViews
-    {
-        get => Views.ToFormattedNumber();
-    }
-    public string? FormattedLikes
-    {
-        get => Likes.ToFormattedNumber();
-    }
-    public string? FormattedComments
-    {
-        get => Comments.ToFormattedNumber();
-    }
-    public string? FormattedVideos
-    {
-        get => Videos.ToFormattedNumber();
-    }
+    public string? FormattedSubscribers => Subscribers.ToFormattedNumber();
+
+    public string? FormattedViews => Views.ToFormattedNumber();
+
+    public string? FormattedLikes => Likes.ToFormattedNumber();
+
+    public string? FormattedComments => Comments.ToFormattedNumber();
+
+    public string? FormattedVideos => Videos.ToFormattedNumber();
 }
