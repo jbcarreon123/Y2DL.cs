@@ -1,4 +1,5 @@
-﻿#nullable enable
+﻿using System.Runtime.Serialization;
+
 namespace Y2DL.Models;
 
 public class Config
@@ -57,7 +58,7 @@ public class BotCustomStatus
 
 public class Services
 {
-    public DynamicChannelInfo DynamicChannelInfo { get; set; }
+    public DynamicChannelInfoConfig DynamicChannelInfo { get; set; }
     public ChannelReleases ChannelReleases { get; set; }
     public DynamicChannelInfoForVoiceChannels DynamicChannelInfoForVoiceChannels { get; set; }
     public Commands Commands { get; set; }
@@ -67,7 +68,7 @@ public class LinkedSubRoles
 {
     public bool Enabled { get; set; }
     public bool AlsoRemoveRoles { get; set; }
-    
+
     public List<LinkedChannels> Channels { get; set; }
 }
 
@@ -91,7 +92,7 @@ public class Embed
     public string? Footer { get; set; }
     public string? FooterUrl { get; set; }
 
-    public EmbedFields Field { get; set; } = new EmbedFields()
+    public EmbedFields Field { get; set; } = new()
     {
         Inline = false,
         Name = "{Channel.Name}",
@@ -99,7 +100,7 @@ public class Embed
     };
 }
 
-public class DynamicChannelInfo
+public class DynamicChannelInfoConfig
 {
     public bool Enabled { get; set; }
     public List<Message> Messages { get; set; }
@@ -183,78 +184,59 @@ public class EmbedFields
 {
     public string Name { get; set; }
     public string Value { get; set; }
-    public bool Inline { get; set; } = false;
+    public bool Inline { get; set; }
 }
 
 public enum AppType
 {
-    [System.Runtime.Serialization.EnumMember(Value = @"Webhook")]
-    Webhook,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Bot")]
-    Bot
+    [EnumMember(Value = @"Webhook")] Webhook,
+
+    [EnumMember(Value = @"Bot")] Bot
 }
 
 [Flags]
 public enum CommandType
 {
-    [System.Runtime.Serialization.EnumMember(Value = @"Prefix")]
-    Prefix,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"SlashCommand")]
-    SlashCommand,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Both")]
-    Both = Prefix | SlashCommand
+    [EnumMember(Value = @"Prefix")] Prefix,
+
+    [EnumMember(Value = @"SlashCommand")] SlashCommand,
+
+    [EnumMember(Value = @"Both")] Both = Prefix | SlashCommand
 }
 
 [Flags]
 public enum CommandList
 {
-    [System.Runtime.Serialization.EnumMember(Value = @"ChannelInfo")]
-    ChannelInfo,
-    [System.Runtime.Serialization.EnumMember(Value = @"LatestVideo")]
-    LatestVideo
+    [EnumMember(Value = @"ChannelInfo")] ChannelInfo,
+    [EnumMember(Value = @"LatestVideo")] LatestVideo
 }
 
 public enum BotState
 {
-    [System.Runtime.Serialization.EnumMember(Value = @"Offline")]
-    Offline,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Online")]
-    Online,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Idle")]
-    Idle,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"AFK")]
-    AFK,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"DoNotDisturb")]
-    DoNotDisturb,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Invisible")]
-    Invisible,
+    [EnumMember(Value = @"Offline")] Offline,
+
+    [EnumMember(Value = @"Online")] Online,
+
+    [EnumMember(Value = @"Idle")] Idle,
+
+    [EnumMember(Value = @"AFK")] AFK,
+
+    [EnumMember(Value = @"DoNotDisturb")] DoNotDisturb,
+
+    [EnumMember(Value = @"Invisible")] Invisible
 }
 
 public enum LogLevel
 {
-    [System.Runtime.Serialization.EnumMember(Value = @"Critical")]
-    Critical,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Error")]
-    Error,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Warning")]
-    Warning,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Info")]
-    Info,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Verbose")]
-    Verbose,
-    
-    [System.Runtime.Serialization.EnumMember(Value = @"Debug")]
-    Debug,
+    [EnumMember(Value = @"Critical")] Critical,
+
+    [EnumMember(Value = @"Error")] Error,
+
+    [EnumMember(Value = @"Warning")] Warning,
+
+    [EnumMember(Value = @"Info")] Info,
+
+    [EnumMember(Value = @"Verbose")] Verbose,
+
+    [EnumMember(Value = @"Debug")] Debug
 }
