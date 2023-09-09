@@ -1,4 +1,5 @@
 ﻿using Y2DL.Utils;
+using Y2DL.Services;
 
 namespace Y2DL.Models;
 
@@ -8,6 +9,10 @@ public class UpdatedChannels
     public YoutubeChannel Channel { get; set; }
 }
 
+/// <summary>
+/// The information of a YouTube channel.
+/// <seealso cref="YoutubeService"/>
+/// </summary>
 public class YoutubeChannel
 {
     public string Name { get; set; } = "";

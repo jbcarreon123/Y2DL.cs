@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using Discord;
+using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -11,7 +13,9 @@ using Serilog.Events;
 using Y2DL.Database;
 using Y2DL.Logging;
 using Y2DL.Models;
+using Y2DL.ServiceInterfaces;
 using Y2DL.Services;
+using Y2DL.Services.DiscordCommandsService;
 using Y2DL.Utils;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -21,7 +25,7 @@ namespace Y2DL;
 public class Program
 {
     private readonly IServiceProvider _serviceProvider = CreateProvider();
-
+    
     private static void Main(string[] args)
     {
         new Program().RunAsync(args).GetAwaiter().GetResult();
@@ -35,7 +39,7 @@ public class Program
             MaxWaitBetweenGuildAvailablesBeforeReady = (int)new TimeSpan(0, 0, 15).TotalMilliseconds,
             MessageCacheSize = 100,
             GatewayIntents = GatewayIntents.GuildMessages | GatewayIntents.Guilds,
-            LogLevel = LogSeverity.Info
+            LogLevel = LogSeverity.Debug
         };
 
         var configFile = File.ReadAllText("Config/Y2DLConfig.yml");
@@ -66,6 +70,9 @@ public class Program
             .AddSingleton(logger)
             .AddSingleton(youTubeServices)
             .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<InteractionService>()
+            .AddSingleton<CommandHandler>()
+            .AddSingleton<DynamicChannelInfo>()
             .AddSingleton<LoopService>()
             .AddSingleton<DatabaseManager>(provider => new DatabaseManager("Database.db3"));
 
@@ -87,8 +94,6 @@ public class Program
         await LogAsync(new LogMessage(LogSeverity.Info, "Y2DL",
             "  > https://github.com/jbcarreon123/YTSCTD/blob/main/LICENSE"));
 
-        await LogAsync(new LogMessage(LogSeverity.Info, "Y2DL", $"Mode: {config.Main.Type.ToString()}"));
-
         if (version != config.Version)
         {
             await LogAsync(new LogMessage(LogSeverity.Warning, "Y2DL",
@@ -98,6 +103,7 @@ public class Program
         }
 
         client.Log += LogAsync;
+        client.Ready += ReadyAsync;
 
         await client.LoginAsync(TokenType.Bot, config.Main.BotConfig.BotToken);
         await client.StartAsync();
@@ -107,7 +113,14 @@ public class Program
         await Task.Delay(Timeout.Infinite);
     }
 
-    private static async Task LogAsync(LogMessage message)
+    private async Task ReadyAsync()
+    {
+        var commands = _serviceProvider.GetRequiredService<CommandHandler>();
+
+        await commands.InitializeCommandsAsync();
+    }
+
+    private async Task LogAsync(LogMessage message)
     {
         var severity = message.Severity switch
         {

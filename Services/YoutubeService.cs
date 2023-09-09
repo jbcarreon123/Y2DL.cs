@@ -4,6 +4,10 @@ using Y2DL.ServiceInterfaces;
 
 namespace Y2DL.Services;
 
+/// <summary>
+/// The class for your YouTube channel info needs.
+/// <seealso cref="IYoutubeService"/>
+/// </summary>
 public class YoutubeService : IYoutubeService
 {
     private readonly List<YouTubeService> _youTubeServices;
@@ -13,7 +17,7 @@ public class YoutubeService : IYoutubeService
         _youTubeServices = youTubeServices;
     }
 
-    public YoutubeChannel GetChannel()
+    public async Task<YoutubeChannel> GetChannelAsync(string channelId)
     {
         return default;
     }

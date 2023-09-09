@@ -15,7 +15,7 @@ public class DynamicChannelInfo : IY2DLService
         _config = config;
     }
 
-    public async Task Run()
+    public async Task RunAsync()
     {
     }
 }

@@ -3,7 +3,7 @@
 public interface IY2DLService
 {
     /// <summary>
-    ///     Runs the Y2DL service.
+    ///     Runs the Y2DL service, asynchronously.
     /// </summary>
-    Task Run();
+    Task RunAsync();
 }
