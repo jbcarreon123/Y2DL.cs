@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>2.0.0-b2</Version>
+        <Title>YouTube2DiscordLink</Title>
+        <Authors>jbcarreon123</Authors>
+        <PackageProjectUrl>https://github.com/jbcarreon123/Y2DL</PackageProjectUrl>
+        <PackageIcon>Y2DL.ico</PackageIcon>
+        <RepositoryUrl>https://github.com/jbcarreon123/Y2DL</RepositoryUrl>
+        <ApplicationIcon>Y2DL.ico</ApplicationIcon>
+        <Description>Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel. </Description>
+        <Copyright>jbcarreon123 @ 2022</Copyright>
+        <PackageLicenseUrl>https://github.com/jbcarreon123/Y2DL/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryType>Git</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Discord.Net" Version="3.12.0"/>
+        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.61.0.3141"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.6.23329.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-preview.6.23329.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.6.23329.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-preview.6.23329.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.7.23375.6"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.7.23375.6"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-preview.7.23375.6"/>
+        <PackageReference Include="Serilog" Version="3.0.2-dev-02044"/>
+        <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.2.0-dev-00918"/>
+        <PackageReference Include="SmartFormat" Version="3.2.2"/>
+        <PackageReference Include="System.Data.SQLite" Version="1.0.118"/>
+        <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0-preview.7.23375.6"/>
+        <PackageReference Include="YamlDotNet" Version="13.2.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Y2DL.ico">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Images\"/>
+    </ItemGroup>
+
+</Project>
