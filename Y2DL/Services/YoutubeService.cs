@@ -65,16 +65,13 @@ public class YoutubeService : IYoutubeService
             try
             {
                 var playlistItems = await GetPlaylistItemsAsync(
-                    new Listable<string>(channelResponse.Items.Select(x => x.ContentDetails.RelatedPlaylists.Uploads)));
+                    new Listable<string>(channelResponse.Items.Select(x => x.ContentDetails.RelatedPlaylists.Uploads)), youtubeService);
                 var vids = playlistItems
-                    .Select(x => x.Items.Select(y => y.Snippet.ResourceId.VideoId).Take(5).ToArray())
+                    .Select(x => x.ContentDetails.VideoId)
                     .ToArray();
                 var vidListRequest =
                     youtubeService.Videos.List("snippet,statistics,contentDetails,liveStreamingDetails");
-                var vidIds = new Listable<string>();
-                foreach (var vid in vids)
-                    vidIds.AddRange(vid);
-                vidListRequest.Id = vidIds;
+                vidListRequest.Id = vids;
                 var videoResponse = await vidListRequest.ExecuteAsync();
                 var video = videoResponse.Items;
                 videos.AddRange(video);
@@ -164,49 +161,24 @@ public class YoutubeService : IYoutubeService
             return null;
         }
     }
-    
-    private async Task<Listable<PlaylistItem>> GetPlaylistItemsAsync2(Listable<string> playlistIds, YouTubeService youtubeService)
+
+    private async Task<Listable<PlaylistItem>> GetPlaylistItemsAsync(Listable<string> channelIds, YouTubeService youTubeService)
     {
-        Listable<PlaylistItem> playlistItem = new Listable<PlaylistItem>();
+        Listable<PlaylistItem> playlistItems = new Listable<PlaylistItem>();
         
         using (var httpClient = new HttpClient())
         {
-            var plListRequest =
-                youtubeService.PlaylistItems.List("snippet,contentDetails");
-            foreach (var playlistId in playlistIds)
+            foreach (var channelId in channelIds)
             {
+                if (channelId.IsNullOrWhitespace())
+                    continue;
+                
                 try
                 {
-                    plListRequest.PlaylistId = playlistId;
-                    var req = await plListRequest.ExecuteAsync();
-                    playlistItem.AddRange(req.Items.Take(2));
-
-                    await Task.Delay(50);
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        return playlistItem;
-    }
-
-    private async Task<Listable<PlaylistItems>> GetPlaylistItemsAsync(Listable<string> playlistIds)
-    {
-        Listable<PlaylistItems> playlistItems = new Listable<PlaylistItems>();
-        
-        using (var httpClient = new HttpClient())
-        {
-            foreach (var playlistId in playlistIds)
-            {
-                try
-                {
-                    var playlistItemString = await httpClient.GetStringAsync(
-                        $"https://yt.lemnoslife.com/noKey/playlistItems?part=snippet&playlistId={playlistId}");
-                    playlistItems.Add(JsonConvert.DeserializeObject<PlaylistItems>(playlistItemString));
-
-                    await Task.Delay(50);
+                    var playlistItemsRequest = youTubeService.PlaylistItems.List("snippet,contentDetails");
+                    playlistItemsRequest.PlaylistId = "UULF" + channelId.Substring(2);
+                    var playlistItemsResponse = await playlistItemsRequest.ExecuteAsync();
+                    playlistItems.AddRange(playlistItemsResponse.Items.Take(2));
                 } catch {}
             }
         }

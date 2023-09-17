@@ -32,10 +32,10 @@ public class DynamicChannelInfo : IY2DLService<YoutubeChannel>
         
         if (msg.Output.UseWebhook)
         {
-            if (_database.Exists(youtubeChannel.Id, msg.Output.ChannelId))
+            if (_database.MessagesExists(youtubeChannel.Id, msg.Output.ChannelId))
             {
                 await new DiscordWebhookClient(msg.Output.WebhookUrl)
-                    .ModifyMessageAsync(_database.Get(youtubeChannel.Id, msg.Output.ChannelId), x =>
+                    .ModifyMessageAsync(_database.MessagesGet(youtubeChannel.Id, msg.Output.ChannelId), x =>
                     {
                         x.Content = msg.Content;
                         x.Embeds = new []
@@ -55,15 +55,15 @@ public class DynamicChannelInfo : IY2DLService<YoutubeChannel>
                         }
                     );
                 
-                _database.Add(msg.Output.ChannelId, msgId, youtubeChannel.Id);
+                await _database.MessagesAdd(msg.Output.ChannelId, msgId, youtubeChannel.Id);
             }
         }
         else
         {
-            if (_database.Exists(youtubeChannel.Id, msg.Output.ChannelId))
+            if (_database.MessagesExists(youtubeChannel.Id, msg.Output.ChannelId))
             {
                 await _client.GetGuild(msg.Output.GuildId).GetTextChannel(msg.Output.ChannelId)
-                    .ModifyMessageAsync(_database.Get(youtubeChannel.Id, msg.Output.ChannelId), x =>
+                    .ModifyMessageAsync(_database.MessagesGet(youtubeChannel.Id, msg.Output.ChannelId), x =>
                     {
                         x.Content = msg.Content;
                         x.Embeds = new []
@@ -80,7 +80,7 @@ public class DynamicChannelInfo : IY2DLService<YoutubeChannel>
                         embed: embed
                     );
 
-                _database.Add(msg.Output.ChannelId, m.Id, youtubeChannel.Id);
+                await _database.MessagesAdd(msg.Output.ChannelId, m.Id, youtubeChannel.Id);
             }
         }
     }

@@ -15,7 +15,7 @@ public class DatabaseManager
         _y2dlDbContext = Y2dlDbContext;
     }
 
-    public void Add(ulong channelId, ulong messageId, string youtubeChannelId)
+    public async Task MessagesAdd(ulong channelId, ulong messageId, string youtubeChannelId)
     {
         _y2dlDbContext.Add(new DynamicChannelInfoMessages()
         {
@@ -24,9 +24,10 @@ public class DatabaseManager
             YoutubeChannelId = youtubeChannelId,
             Hash = HashUtils.HashThingToSHA256String(channelId + messageId + youtubeChannelId)
         });
+        await _y2dlDbContext.SaveChangesAsync();
     }
 
-    public ulong Get(string ytChannelId, ulong channelId)
+    public ulong MessagesGet(string ytChannelId, ulong channelId)
     {
         var f = _y2dlDbContext.DynamicChannelInfoMessages
             .First(x => x.ChannelId == channelId && x.YoutubeChannelId == ytChannelId);
@@ -34,7 +35,7 @@ public class DatabaseManager
         return f.MessageId;
     }
 
-    public bool Exists(string ytChannelId, ulong channelId)
+    public bool MessagesExists(string ytChannelId, ulong channelId)
     {
         try
         {
@@ -49,8 +50,9 @@ public class DatabaseManager
         }
     }
 
-    public void Remove(ulong messageId)
+    public async Task MessagesRemove(ulong messageId)
     {
         _y2dlDbContext.Remove(_y2dlDbContext.DynamicChannelInfoMessages.First(x => x.MessageId == messageId));
+        await _y2dlDbContext.SaveChangesAsync();
     }
 }
