@@ -1,4 +1,4 @@
-<img width="275" height="275" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="Images/Y2DL.png">  
+<img width="275" height="275" align="left" style="float: left; margin: 0 10px 0 0;" alt="Y2DL" src="Y2DL/Images/Y2DL.png">  
 
 # YouTube2DiscordLink (formerly YTSCTD)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/jbcarreon123/Y2DL/dotnet.yml) ![GitHub all releases](https://img.shields.io/github/downloads/jbcarreon123/Y2DL/total) [![Discord](https://img.shields.io/discord/1135815464891732089)](https://discord.gg/P5ecFZNyCc)
