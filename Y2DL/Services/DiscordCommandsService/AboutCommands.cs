@@ -2,10 +2,12 @@
 using System.Reflection;
 using Discord;
 using Discord.Interactions;
+using Y2DL.Attributes;
 
 namespace Y2DL.Services.DiscordCommandsService;
 
 [Group("about", "About this bot or Y2DL (if configured)")]
+[DiscordCommands("y2dl.builtin.about")]
 public class AboutCommands : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("y2dl", "About Y2DL")]

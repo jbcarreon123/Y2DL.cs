@@ -27,6 +27,11 @@ public class Program
 {
     private readonly IServiceProvider _serviceProvider = CreateProvider();
     
+    /// <summary>
+    /// The entry point of Y2DL.
+    /// Note that this isn't a single-threaded program,
+    /// so don't put anything single-threaded below this (like [STAThread])
+    /// </summary>
     private static void Main(string[] args)
     {
         new Program().RunAsync(args).GetAwaiter().GetResult();
@@ -111,16 +116,16 @@ public class Program
         await client.LoginAsync(TokenType.Bot, config.Main.BotConfig.BotToken);
         await client.StartAsync();
 
-        await loopService.StartAsync(CancellationToken.None);
-
         await Task.Delay(Timeout.Infinite);
     }
 
     private async Task ReadyAsync()
     {
         var commands = _serviceProvider.GetRequiredService<CommandHandler>();
+        var loopService = _serviceProvider.GetRequiredService<LoopService>();
 
         await commands.InitializeCommandsAsync();
+        await loopService.StartAsync(CancellationToken.None);
     }
 
     private async Task LogAsync(LogMessage message)

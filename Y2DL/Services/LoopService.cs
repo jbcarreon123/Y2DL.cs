@@ -41,7 +41,7 @@ public class LoopService : BackgroundService
 
                 foreach (var channel in channels)
                 {
-                    if (_config.Services.DynamicChannelInfo.Enabled && _config.Services.DynamicChannelInfoForVoiceChannels.Channels.Exists(x => x.ChannelId == channel.Id))
+                    if (_config.Services.DynamicChannelInfo.Enabled && _config.Services.DynamicChannelInfo.Messages.Exists(x => x.ChannelId == channel.Id))
                     {
                         await _dynamicChannelInfo.RunAsync(channel);
                     }

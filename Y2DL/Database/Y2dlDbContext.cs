@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// IT WON'T HAPPEN AGAIN, i said.
+
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Y2DL.Database;
@@ -22,7 +24,6 @@ public class Y2dlDbContext : DbContext
 
 public class DynamicChannelInfoMessages
 {
-    public ulong GuildId { get; set; }
     public ulong ChannelId { get; set; } 
     public ulong MessageId { get; set; }
     public string YoutubeChannelId { get; set; }

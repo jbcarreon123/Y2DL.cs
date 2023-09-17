@@ -15,15 +15,14 @@ public class DatabaseManager
         _y2dlDbContext = Y2dlDbContext;
     }
 
-    public void Add(ulong guildId, ulong channelId, ulong messageId, string youtubeChannelId)
+    public void Add(ulong channelId, ulong messageId, string youtubeChannelId)
     {
         _y2dlDbContext.Add(new DynamicChannelInfoMessages()
         {
             ChannelId = channelId,
-            GuildId = guildId,
             MessageId = messageId,
             YoutubeChannelId = youtubeChannelId,
-            Hash = HashUtils.HashThingToSHA256String(guildId + channelId + messageId + youtubeChannelId)
+            Hash = HashUtils.HashThingToSHA256String(channelId + messageId + youtubeChannelId)
         });
     }
 

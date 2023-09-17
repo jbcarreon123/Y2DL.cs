@@ -26,7 +26,7 @@ public static class TimeSpanUtils
         return formattedDuration.ToString();
     }
 
-    public static TimeSpan ToTimeSpan(this string str)
+    public static TimeSpan ToTimeSpan(this string? str)
     {
         try
         {

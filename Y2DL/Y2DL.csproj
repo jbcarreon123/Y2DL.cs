@@ -9,9 +9,9 @@
         <Title>YouTube2DiscordLink</Title>
         <Authors>jbcarreon123</Authors>
         <PackageProjectUrl>https://github.com/jbcarreon123/Y2DL</PackageProjectUrl>
-        <PackageIcon>Y2DL.ico</PackageIcon>
+        <PackageIcon>..\Y2DL.ico</PackageIcon>
         <RepositoryUrl>https://github.com/jbcarreon123/Y2DL</RepositoryUrl>
-        <ApplicationIcon>Y2DL.ico</ApplicationIcon>
+        <ApplicationIcon>..\Y2DL.ico</ApplicationIcon>
         <Description>Gets channel info from one or multiple channels, and sends it on a Text channel or on a Voice channel. </Description>
         <Copyright>jbcarreon123 @ 2022</Copyright>
         <PackageLicenseUrl>https://github.com/jbcarreon123/Y2DL/blob/main/LICENSE</PackageLicenseUrl>

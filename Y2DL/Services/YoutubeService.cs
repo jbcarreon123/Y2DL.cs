@@ -36,7 +36,7 @@ public class YoutubeService : IYoutubeService
         {
             if (_youTubeServices.Count is 1)
             {
-                Log.Error(e, "Google API thrown an exception");
+                Log.Error(e, "Google API thrown an exception, possibly API quota exceeded");
                 return null;
             }
 
@@ -77,14 +77,49 @@ public class YoutubeService : IYoutubeService
                 vidListRequest.Id = vidIds;
                 var videoResponse = await vidListRequest.ExecuteAsync();
                 var video = videoResponse.Items;
+                videos.AddRange(video);
             }
-            catch
+            catch (Exception e)
             {
+                Log.Warning(e, "An error occured while getting videos");
             }
 
             foreach (var channel in channelResponse.Items)
             {
-                var vid = videos.First(x => x.Snippet.ChannelId == channel.Id && !x.IsShort().Result);
+                Video vid = new Video();
+                try
+                {
+                    vid = videos.First(x => x.Snippet.ChannelId == channel.Id);
+                }
+                catch
+                {
+                    vid = new Video()
+                    {
+                        Snippet = new VideoSnippet()
+                        {
+                            Description = null,
+                            Title = null,
+                            PublishedAtDateTimeOffset = DateTimeOffset.MinValue,
+                            Thumbnails = new ThumbnailDetails()
+                            {
+                                Maxres = new Thumbnail()
+                                {
+                                    Url = null
+                                }
+                            }
+                        },
+                        ContentDetails = new VideoContentDetails()
+                        {
+                            Duration = null
+                        },
+                        Statistics = new VideoStatistics()
+                        {
+                            CommentCount = null,
+                            LikeCount = null,
+                            ViewCount = null
+                        }
+                    };
+                }
 
                 youtubeChannels.Add(new YoutubeChannel()
                 {
@@ -122,10 +157,39 @@ public class YoutubeService : IYoutubeService
 
             return youtubeChannels;
         }
-        catch
+        catch (Exception e)
         {
+            Log.Warning(e, "An error occured while getting channels");
+            
             return null;
         }
+    }
+    
+    private async Task<Listable<PlaylistItem>> GetPlaylistItemsAsync2(Listable<string> playlistIds, YouTubeService youtubeService)
+    {
+        Listable<PlaylistItem> playlistItem = new Listable<PlaylistItem>();
+        
+        using (var httpClient = new HttpClient())
+        {
+            var plListRequest =
+                youtubeService.PlaylistItems.List("snippet,contentDetails");
+            foreach (var playlistId in playlistIds)
+            {
+                try
+                {
+                    plListRequest.PlaylistId = playlistId;
+                    var req = await plListRequest.ExecuteAsync();
+                    playlistItem.AddRange(req.Items.Take(2));
+
+                    await Task.Delay(50);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        return playlistItem;
     }
 
     private async Task<Listable<PlaylistItems>> GetPlaylistItemsAsync(Listable<string> playlistIds)
@@ -136,11 +200,14 @@ public class YoutubeService : IYoutubeService
         {
             foreach (var playlistId in playlistIds)
             {
-                var playlistItemString = await httpClient.GetStringAsync(
-                    $"https://yt.lemnoslife.com/playlistItems?part=snippet&playlistId={playlistId}");
-                playlistItems.Add(JsonConvert.DeserializeObject<PlaylistItems>(playlistItemString));
+                try
+                {
+                    var playlistItemString = await httpClient.GetStringAsync(
+                        $"https://yt.lemnoslife.com/noKey/playlistItems?part=snippet&playlistId={playlistId}");
+                    playlistItems.Add(JsonConvert.DeserializeObject<PlaylistItems>(playlistItemString));
 
-                await Task.Delay(50);
+                    await Task.Delay(50);
+                } catch {}
             }
         }
 
