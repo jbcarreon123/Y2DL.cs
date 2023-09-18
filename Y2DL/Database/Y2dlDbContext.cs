@@ -2,12 +2,14 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Y2DL.Models;
 
 namespace Y2DL.Database;
 
 public class Y2dlDbContext : DbContext 
 {
     public DbSet<DynamicChannelInfoMessages> DynamicChannelInfoMessages { get; set; }
+    public DbSet<ChannelReleasesLatestVideo> ChannelReleasesLatestVideos { get; set; }
     
     public string DbPath { get; set; }
     
@@ -29,4 +31,11 @@ public class DynamicChannelInfoMessages
         
     [Key]
     public string Hash { get; set; }
+}
+
+public class ChannelReleasesLatestVideo
+{
+    [Key]
+    public string? Id { get; set; }
+    public string? ChannelId { get; set; } 
 }

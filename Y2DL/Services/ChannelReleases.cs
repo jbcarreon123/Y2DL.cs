@@ -12,11 +12,11 @@ public class ChannelReleases : IY2DLService<YoutubeChannel>
 {
     private static List<(string, string)> _latestVideo { get; set; } = new();
     
-    private readonly DiscordSocketClient _client;
+    private readonly DiscordShardedClient _client;
     private readonly Config _config;
     private readonly DatabaseManager _database;
 
-    public ChannelReleases(DiscordSocketClient client, Config config, DatabaseManager database)
+    public ChannelReleases(DiscordShardedClient client, Config config, DatabaseManager database)
     {
         _client = client;
         _config = config;

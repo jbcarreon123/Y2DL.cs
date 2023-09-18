@@ -1,8 +1,13 @@
 ﻿using System.Drawing;
 using Discord;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Y2DL.Models;
 using SmartFormat;
+using SmartFormat.Core.Extensions;
+using SmartFormat.Core.Settings;
+using SmartFormat.Extensions;
+using Y2DL.SmartFormatters;
 
 namespace Y2DL.Utils;
 
@@ -12,6 +17,8 @@ public static class EmbedUtils
     {
         try
         {
+            Smart.Default.AddExtensions(new LimitFormatter());
+            
             var color = ColorTranslator.FromHtml(embeds.Color);
 
             EmbedBuilder embedBuilder = new EmbedBuilder()

@@ -16,6 +16,10 @@
         <Copyright>jbcarreon123 @ 2022</Copyright>
         <PackageLicenseUrl>https://github.com/jbcarreon123/Y2DL/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryType>Git</RepositoryType>
+        <PackageTags></PackageTags>
+        <AssemblyVersion></AssemblyVersion>
+        <FileVersion>1f3a25b</FileVersion>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -49,10 +53,19 @@
             <PackagePath></PackagePath>
         </None>
         <None Include="bin\Debug\net6.0\Y2DL_Database.db" />
+        <None Remove="bin\**" />
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="Images\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="bin\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="bin\**" />
     </ItemGroup>
 
 </Project>

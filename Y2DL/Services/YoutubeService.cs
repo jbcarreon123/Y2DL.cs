@@ -132,6 +132,7 @@ public class YoutubeService : IYoutubeService
                     LatestVideo = new LatestVideo()
                     {
                         Id = vid.Id ?? "",
+                        ChannelId = vid.Snippet.ChannelId,
                         Description = vid.Snippet.Description ?? "or an error occured while getting latest video.",
                         Title = vid.Snippet.Title ?? "No videos",
                         Thumbnail = vid.Snippet.Thumbnails.Maxres.Url ?? "",
@@ -174,7 +175,7 @@ public class YoutubeService : IYoutubeService
                     var playlistItemsRequest = youTubeService.PlaylistItems.List("snippet,contentDetails");
                     playlistItemsRequest.PlaylistId = "UULF" + channelId.Substring(2);
                     var playlistItemsResponse = await playlistItemsRequest.ExecuteAsync();
-                    playlistItems.AddRange(playlistItemsResponse.Items.Take(2));
+                    playlistItems.AddRange(playlistItemsResponse.Items.Take(1));
                 } catch {}
             }
         }
@@ -186,6 +187,9 @@ public class YoutubeService : IYoutubeService
     {
         List<string> videoIds = new List<string>();
         
+        // Method 1 (RSS)
+        // Much less quota used, but includes shorts
+        /*
         foreach (var channelId in channelIds)
         {
             try
@@ -201,6 +205,12 @@ public class YoutubeService : IYoutubeService
 
             }
         }
+        */
+        
+        // Method 2 (API)
+        // Much more quota used, but excludes shorts
+        var plItems = await GetPlaylistItemsAsync(channelIds, youtubeService);
+        videoIds.AddRange(plItems.Select(x => x.ContentDetails.VideoId));
         
         var vidListRequest =
             youtubeService.Videos.List("snippet,statistics,contentDetails,liveStreamingDetails");

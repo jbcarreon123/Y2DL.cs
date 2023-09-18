@@ -1,4 +1,6 @@
-﻿using Y2DL.Utils;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Y2DL.Utils;
 using Y2DL.Services;
 
 namespace Y2DL.Models;
@@ -38,6 +40,7 @@ public class LatestVideo
 {
     public string? Title { get; set; } = "";
     public string? Id { get; set; } = "";
+    public string? ChannelId { get; set; } = ""; 
     public string? Url { get; set; } = "";
     public string? Description { get; set; } = "";
     public string? Thumbnail { get; set; } = "";
@@ -46,6 +49,7 @@ public class LatestVideo
     public Statistics? Statistics { get; set; } = new();
 }
 
+[Keyless]
 public class Statistics
 {
     public ulong Views { get; set; } = 0;

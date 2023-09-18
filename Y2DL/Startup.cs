@@ -10,12 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using SmartFormat;
 using Y2DL.Database;
 using Y2DL.Logging;
 using Y2DL.Models;
 using Y2DL.ServiceInterfaces;
 using Y2DL.Services;
 using Y2DL.Services.DiscordCommandsService;
+using Y2DL.SmartFormatters;
 using Y2DL.Utils;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -57,7 +59,7 @@ public class Startup
         var appConfig = deserializer.Deserialize<Config>(configFile);
 
         var logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.Discord(appConfig)
@@ -80,9 +82,9 @@ public class Startup
             .AddSingleton(appConfig)
             .AddSingleton(logger)
             .AddSingleton(youTubeServices)
-            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<DiscordShardedClient>()
             .AddSingleton<InteractionService>()
-            .AddSingleton<CommandHandler>()
+            .AddSingleton<InteractionHandler>()
             .AddSingleton<LoopService>()
             .AddSingleton<DatabaseManager>();
 
@@ -91,8 +93,9 @@ public class Startup
 
     private async Task RunAsync(string[] args)
     {
-        var client = _serviceProvider.GetRequiredService<DiscordSocketClient>();
+        var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         var config = _serviceProvider.GetRequiredService<Config>();
+        var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
         var loopService = _serviceProvider.GetRequiredService<LoopService>();
         Log.Logger = _serviceProvider.GetRequiredService<Logger>();
 
@@ -113,21 +116,24 @@ public class Startup
         }
 
         client.Log += LogAsync;
-        client.Ready += ReadyAsync;
+        client.ShardReady += ReadyAsync;
+        
+        await commands.InitializeAsync();
 
         await client.LoginAsync(TokenType.Bot, config.Main.BotConfig.BotToken);
         await client.StartAsync();
 
+        await Task.Delay(5000);
+        await loopService.StartAsync(CancellationToken.None);
+
         await Task.Delay(Timeout.Infinite);
     }
 
-    private async Task ReadyAsync()
+    private async Task ReadyAsync(DiscordSocketClient client)
     {
-        var commands = _serviceProvider.GetRequiredService<CommandHandler>();
-        var loopService = _serviceProvider.GetRequiredService<LoopService>();
-
-        await commands.InitializeCommandsAsync();
-        await loopService.StartAsync(CancellationToken.None);
+        var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
+        commands.RegisterAsync();
+        Log.Information($"Sharding: Shard {client.ShardId} ready.");
     }
 
     private async Task LogAsync(LogMessage message)

@@ -13,11 +13,11 @@ namespace Y2DL.Services;
 [Y2DLService("Y2DL.DynamicChannelInfo")]
 public class DynamicChannelInfo : IY2DLService<YoutubeChannel>
 {
-    private readonly DiscordSocketClient _client;
+    private readonly DiscordShardedClient _client;
     private readonly Config _config;
     private readonly DatabaseManager _database;
 
-    public DynamicChannelInfo(DiscordSocketClient client, Config config, DatabaseManager database)
+    public DynamicChannelInfo(DiscordShardedClient client, Config config, DatabaseManager database)
     {
         _client = client;
         _config = config;

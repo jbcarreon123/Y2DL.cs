@@ -9,13 +9,13 @@ namespace Y2DL.Services;
 
 public class LoopService : BackgroundService
 {
-    private readonly DiscordSocketClient _client;
+    private readonly DiscordShardedClient _client;
     private readonly Config _config;
     private readonly YoutubeService _youtubeService;
     private readonly DynamicChannelInfo _dynamicChannelInfo;
     private readonly ChannelReleases _channelReleases;
 
-    public LoopService(DiscordSocketClient client, Config config, DynamicChannelInfo dynamicChannelInfo, ChannelReleases channelReleases, YoutubeService youtubeService)
+    public LoopService(DiscordShardedClient client, Config config, DynamicChannelInfo dynamicChannelInfo, ChannelReleases channelReleases, YoutubeService youtubeService)
     {
         _client = client;
         _config = config;

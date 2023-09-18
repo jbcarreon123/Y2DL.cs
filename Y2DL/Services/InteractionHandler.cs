@@ -8,26 +8,20 @@ using Y2DL.Models;
 
 namespace Y2DL.Services;
 
-public class CommandHandler
+public class InteractionHandler
 {
-    private readonly DiscordSocketClient _client;
+    private readonly DiscordShardedClient _client;
     private readonly InteractionService _commands;
     private readonly Config _config;
     private readonly IServiceProvider _serviceProvider;
 
-    public CommandHandler(DiscordSocketClient client, InteractionService commands, Config config, IServiceProvider serviceProvider)
+    public InteractionHandler(DiscordShardedClient client, InteractionService commands, Config config, IServiceProvider serviceProvider)
     {
         _client = client;
         _commands = commands;
         _config = config;
         _serviceProvider = serviceProvider;
-    }
-    
-    public async Task InitializeCommandsAsync()
-    {
-        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
-        await _commands.RegisterCommandsGloballyAsync();
-
+        
         // Bind InteractionCreated
         _client.InteractionCreated += HandleInteraction;
 
@@ -35,6 +29,19 @@ public class CommandHandler
         _commands.SlashCommandExecuted += SlashCommandExecuted;
         _commands.ContextCommandExecuted += ContextCommandExecuted;
         _commands.ComponentCommandExecuted += ComponentCommandExecuted;
+    }
+    
+    public async Task InitializeAsync()
+    {
+        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
+    }
+
+    public async Task RegisterAsync()
+    {
+        try
+        {
+            await _commands.RegisterCommandsGloballyAsync(true);
+        } catch {}
     }
 
     private Task ComponentCommandExecuted(ComponentCommandInfo arg1, IInteractionContext arg2, Discord.Interactions.IResult arg3)
@@ -67,7 +74,7 @@ public class CommandHandler
         
         try
         {
-            SocketInteractionContext ctx = new SocketInteractionContext(_client, arg);
+            ShardedInteractionContext ctx = new ShardedInteractionContext(_client, arg);
             await _commands.ExecuteCommandAsync(ctx, null);
         }
         catch (Exception ex)
