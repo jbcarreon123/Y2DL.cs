@@ -27,10 +27,9 @@ public class ChannelReleases : IY2DLService<YoutubeChannel>
     {
         try
         {
-            if (channel.LatestVideo.Id != _latestVideo.First(x => x.Item1 == channel.Id).Item2)
+            if (channel.LatestVideo.Id == "")
             {
-                _latestVideo.Remove(_latestVideo.First(x => x.Item1 == channel.Id));
-                _latestVideo.Add((channel.Id, channel.LatestVideo.Id));
+                
 
                 foreach (var msg in _config.Services.ChannelReleases.Messages.FindAll(x => x.ChannelId == channel.Id))
                 {

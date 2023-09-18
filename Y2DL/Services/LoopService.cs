@@ -13,15 +13,17 @@ public class LoopService : BackgroundService
     private readonly Config _config;
     private readonly YoutubeService _youtubeService;
     private readonly DynamicChannelInfo _dynamicChannelInfo;
+    private readonly DynamicVoiceChannelInfo _dynamicVoiceChannelInfo;
     private readonly ChannelReleases _channelReleases;
 
-    public LoopService(DiscordShardedClient client, Config config, DynamicChannelInfo dynamicChannelInfo, ChannelReleases channelReleases, YoutubeService youtubeService)
+    public LoopService(DiscordShardedClient client, Config config, DynamicChannelInfo dynamicChannelInfo, ChannelReleases channelReleases, YoutubeService youtubeService, DynamicVoiceChannelInfo dynamicVoiceChannelInfo)
     {
         _client = client;
         _config = config;
         _dynamicChannelInfo = dynamicChannelInfo;
         _channelReleases = channelReleases;
         _youtubeService = youtubeService;
+        _dynamicVoiceChannelInfo = dynamicVoiceChannelInfo;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -51,6 +53,11 @@ public class LoopService : BackgroundService
                     if (_config.Services.ChannelReleases.Enabled && _config.Services.ChannelReleases.Messages.Exists(x => x.ChannelId == channel.Id))
                     {
                         await _channelReleases.RunAsync(channel);
+                    }
+                    
+                    if (_config.Services.DynamicChannelInfoForVoiceChannels.Enabled && _config.Services.DynamicChannelInfoForVoiceChannels.Channels.Exists(x => x.ChannelId == channel.Id))
+                    {
+                        await _dynamicVoiceChannelInfo.RunAsync(channel);
                     }
                 }
                 

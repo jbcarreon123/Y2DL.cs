@@ -14,12 +14,12 @@ namespace Y2DL.Migrations
                 name: "ChannelReleasesLatestVideos",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    VideoId = table.Column<string>(type: "TEXT", nullable: false),
                     ChannelId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChannelReleasesLatestVideos", x => x.Id);
+                    table.PrimaryKey("PK_ChannelReleasesLatestVideos", x => x.VideoId);
                 });
         }
 

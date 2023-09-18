@@ -9,48 +9,23 @@ namespace Y2DL.Services.DiscordCommandsService;
 [DiscordCommands("y2dl.builtin.status")]
 public class StatusCommands : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("status", "Status of the bot")]
-    public async Task Status()
+    [SlashCommand("shards", "Show information for all shards")]
+    public async Task Sharding()
     {
-        var emojis = "";
-        foreach (var shard in Context.Client.Shards)
-        {
-            if (shard.Latency != 0)
-                emojis += "🟩";
-            else
-                emojis += "🟥";
-        }
-
         await RespondAsync(embed: new EmbedBuilder()
-            .WithTitle($"Bot Status")
-            .AddField("Shards", emojis)
-            .Build());
-    }
-    
-    [SlashCommand("ping", "Ping the bot!")]
-    public async Task Ping()
-    {
-        var stopwatch = Stopwatch.StartNew();
-        
-        await RespondAsync(embed: new EmbedBuilder()
-            .WithTitle($"Ping the bot")
-            .AddField("Heartbeat", $"Getting it, please wait.", true)
-            .AddField("Init Latency", "Getting it, please wait.", true)
-            .Build());
-
-        var msg = "";
-
-        foreach (var shard in Context.Client.Shards)
-        {
-            msg += $"Shard {shard.ShardId}: **{shard.Latency}**ms\r\n";
-        }
-        
-        stopwatch.Stop();
-        
-        await ModifyOriginalResponseAsync(x => x.Embed = new EmbedBuilder()
-            .WithTitle($"Ping the bot")
-            .AddField("Heartbeat", msg, true)
-            .AddField("Init Latency", $"**{stopwatch.Elapsed.TotalMilliseconds.Round()}**ms", true)
+            .WithTitle($"Sharding")
+            .AddField("Shards List",
+                String.Join("\r\n",
+                    Context.Client.Shards.Select(x =>
+                        $"{(x.ConnectionState switch { ConnectionState.Connected => "🟩", ConnectionState.Connecting => "🟧", _ => "🟥" })} Shard **{x.ShardId}**")),
+                true)
+            .AddField("Guild Count",
+                String.Join("\r\n",
+                    Context.Client.Shards.Select(x => $"**{x.Guilds.Count}** guild{(x.Guilds.Count != 1 ? "s" : "")}")),
+                true)
+            .AddField("Ping", String.Join("\r\n", Context.Client.Shards.Select(x => $"**{x.Latency}**ms")), true)
+            .WithFooter(
+                $"This guild is on Shard {Context.Client.GetShardIdFor(Context.Guild)} -- Guild ID is {Context.Guild.Id}")
             .Build());
     }
 }

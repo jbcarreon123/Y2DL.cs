@@ -20,7 +20,7 @@ public class AboutCommands : InteractionModuleBase<ShardedInteractionContext>
 
         await RespondAsync(embed: new EmbedBuilder()
             .WithTitle($"YouTube2DiscordLink [Y2DL] {version}{(vsl is not ""? $" (in commit {vsl})": "")}")
-            .WithDescription($"{(vsl is not ""? $"# WARNING\r\n[DVT-BLD2_cm1f3a25b]\r\nThis is a really unstable and incomplete release.\r\nPlease see the updates on `HEAD` before writing an issue report.\r\n\r\n": "")}Y2DL is a application that gets public info from YouTube's API and sends it to Discord.")
+            .WithDescription($"{(vsl is not ""? $"# WARNING\r\n[DVT-BLD2_cm1f3a25b]\r\nThis is a incomplete and is a pre-release.\r\nPlease see the updates on `HEAD` before writing an issue report.\r\n\r\n": "")}Y2DL is a application that gets public info from YouTube's API and sends it to Discord.")
             .WithThumbnailUrl("https://jbcarreon123.github.io/Y2DL.png")
             .AddField("Plugins", "This is a placeholder. `PluginManager` isn't implemented yet.\r\n**To check plugin's about, use /about plugin.**\r\n**Y2DL-Utils** by jbcarreon123\r\n**TwitchPlugin** by jbcarreon123\r\n**PubSubHubbubSupport** by jbcarreon123\r\n**OAuthThings** by jbcarreon123", true)
             .AddField("Thanks to:", "<@783601612601688074> and <@560123152349528066> for implementing it to their server,\r\n<@718620103830405181>, <@302305228416483331> and <@727630415808037008> for the inspiration,\r\nand **You** for using this bot.", true)

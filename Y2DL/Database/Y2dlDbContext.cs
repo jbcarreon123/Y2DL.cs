@@ -21,6 +21,8 @@ public class Y2dlDbContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
+    
+    
 }
 
 public class DynamicChannelInfoMessages
@@ -36,6 +38,6 @@ public class DynamicChannelInfoMessages
 public class ChannelReleasesLatestVideo
 {
     [Key]
-    public string? Id { get; set; }
+    public string? VideoId { get; set; }
     public string? ChannelId { get; set; } 
 }

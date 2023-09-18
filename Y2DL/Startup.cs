@@ -39,6 +39,8 @@ public class Startup
     {
         new Startup().RunAsync(args).GetAwaiter().GetResult();
     }
+    
+    private static readonly int _numOfShards = 5;
 
     private static IServiceProvider CreateProvider()
     {
@@ -48,7 +50,8 @@ public class Startup
             MaxWaitBetweenGuildAvailablesBeforeReady = (int)new TimeSpan(0, 0, 15).TotalMilliseconds,
             MessageCacheSize = 100,
             GatewayIntents = GatewayIntents.GuildMessages | GatewayIntents.Guilds,
-            LogLevel = LogSeverity.Debug
+            LogLevel = LogSeverity.Debug,
+            TotalShards = _numOfShards
         };
 
         var configFile = File.ReadAllText("Config/Y2DLConfig.yml");
@@ -59,7 +62,7 @@ public class Startup
         var appConfig = deserializer.Deserialize<Config>(configFile);
 
         var logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
+            .MinimumLevel.Debug()
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.Discord(appConfig)
@@ -77,6 +80,7 @@ public class Startup
             .AddDbContext<Y2dlDbContext>()
             .AddScoped<YoutubeService>()
             .AddSingleton<DynamicChannelInfo>()
+            .AddSingleton<DynamicVoiceChannelInfo>()
             .AddSingleton<ChannelReleases>()
             .AddSingleton(discordSocketConfig)
             .AddSingleton(appConfig)
@@ -96,7 +100,7 @@ public class Startup
         var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         var config = _serviceProvider.GetRequiredService<Config>();
         var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
-        var loopService = _serviceProvider.GetRequiredService<LoopService>();
+        
         Log.Logger = _serviceProvider.GetRequiredService<Logger>();
 
         var assembly = Assembly.GetExecutingAssembly();
@@ -124,18 +128,25 @@ public class Startup
         await client.StartAsync();
 
         await Task.Delay(5000);
-        await loopService.StartAsync(CancellationToken.None);
+        await commands.RegisterAsync();
 
         await Task.Delay(Timeout.Infinite);
     }
-
+    
+    private static int _readyShards = 0;
     private async Task ReadyAsync(DiscordSocketClient client)
-    {
-        var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
-        commands.RegisterAsync();
-        Log.Information($"Sharding: Shard {client.ShardId} ready.");
+    { 
+        _readyShards++;
+        
+        if (_readyShards >= _numOfShards)
+        {
+            var loopService = _serviceProvider.GetRequiredService<LoopService>();
+            await loopService.StartAsync(CancellationToken.None);
+            Log.Information("All shards are now ready.");
+            return;
+        }
     }
-
+    
     private async Task LogAsync(LogMessage message)
     {
         var severity = message.Severity switch
