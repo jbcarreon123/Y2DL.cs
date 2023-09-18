@@ -48,6 +48,7 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
+        <None Include="bin\Debug\net6.0\Y2DL_Database.db" />
     </ItemGroup>
 
     <ItemGroup>

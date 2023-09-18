@@ -13,12 +13,14 @@ public class LoopService : BackgroundService
     private readonly Config _config;
     private readonly YoutubeService _youtubeService;
     private readonly DynamicChannelInfo _dynamicChannelInfo;
+    private readonly ChannelReleases _channelReleases;
 
-    public LoopService(DiscordSocketClient client, Config config, DynamicChannelInfo dynamicChannelInfo, YoutubeService youtubeService)
+    public LoopService(DiscordSocketClient client, Config config, DynamicChannelInfo dynamicChannelInfo, ChannelReleases channelReleases, YoutubeService youtubeService)
     {
         _client = client;
         _config = config;
         _dynamicChannelInfo = dynamicChannelInfo;
+        _channelReleases = channelReleases;
         _youtubeService = youtubeService;
     }
 
@@ -44,6 +46,11 @@ public class LoopService : BackgroundService
                     if (_config.Services.DynamicChannelInfo.Enabled && _config.Services.DynamicChannelInfo.Messages.Exists(x => x.ChannelId == channel.Id))
                     {
                         await _dynamicChannelInfo.RunAsync(channel);
+                    }
+                    
+                    if (_config.Services.ChannelReleases.Enabled && _config.Services.ChannelReleases.Messages.Exists(x => x.ChannelId == channel.Id))
+                    {
+                        await _channelReleases.RunAsync(channel);
                     }
                 }
                 

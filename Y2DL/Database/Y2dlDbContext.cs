@@ -14,7 +14,7 @@ public class Y2dlDbContext : DbContext
     public Y2dlDbContext()
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        DbPath = Path.Combine(currentDirectory, "/Y2DL_Database.db");
+        DbPath = Path.Combine(currentDirectory, "Y2DL_Database.db");
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder options)

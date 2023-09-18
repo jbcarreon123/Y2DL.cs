@@ -1,4 +1,6 @@
-﻿using Google;
+﻿using System.ServiceModel.Syndication;
+using System.Xml;
+using Google;
 using Google.Apis.Util;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
@@ -41,6 +43,7 @@ public class YoutubeService : IYoutubeService
             }
 
             youtubeService = _youTubeServices.Next(youtubeService);
+            _youTubeServices.MoveFirstToLast();
             youtubeChannels.AddRange(await GetChannelAsync(channelIds, youtubeService));
         }
         catch (Exception e)
@@ -64,16 +67,7 @@ public class YoutubeService : IYoutubeService
             List<Video> videos = new List<Video>();
             try
             {
-                var playlistItems = await GetPlaylistItemsAsync(
-                    new Listable<string>(channelResponse.Items.Select(x => x.ContentDetails.RelatedPlaylists.Uploads)), youtubeService);
-                var vids = playlistItems
-                    .Select(x => x.ContentDetails.VideoId)
-                    .ToArray();
-                var vidListRequest =
-                    youtubeService.Videos.List("snippet,statistics,contentDetails,liveStreamingDetails");
-                vidListRequest.Id = vids;
-                var videoResponse = await vidListRequest.ExecuteAsync();
-                var video = videoResponse.Items;
+                var video = await GetLatestVideoForChannels(channelIds, youtubeService);
                 videos.AddRange(video);
             }
             catch (Exception e)
@@ -92,6 +86,7 @@ public class YoutubeService : IYoutubeService
                 {
                     vid = new Video()
                     {
+                        Id = null,
                         Snippet = new VideoSnippet()
                         {
                             Description = null,
@@ -136,6 +131,7 @@ public class YoutubeService : IYoutubeService
                     },
                     LatestVideo = new LatestVideo()
                     {
+                        Id = vid.Id ?? "",
                         Description = vid.Snippet.Description ?? "or an error occured while getting latest video.",
                         Title = vid.Snippet.Title ?? "No videos",
                         Thumbnail = vid.Snippet.Thumbnails.Maxres.Url ?? "",
@@ -184,5 +180,32 @@ public class YoutubeService : IYoutubeService
         }
 
         return playlistItems;
+    }
+    
+    private async Task<List<Video>> GetLatestVideoForChannels(Listable<string> channelIds, YouTubeService youtubeService)
+    {
+        List<string> videoIds = new List<string>();
+        
+        foreach (var channelId in channelIds)
+        {
+            try
+            {
+                var url = "https://www.youtube.com/feeds/videos.xml?channel_id=" + channelId;
+                using var reader = XmlReader.Create(url);
+                var feed = SyndicationFeed.Load(reader);
+
+                videoIds.Add(feed.Items.ToList()[0].Links.ToList()[0].Uri.AbsoluteUri.GetYouTubeId());
+            }
+            catch
+            {
+
+            }
+        }
+        
+        var vidListRequest =
+            youtubeService.Videos.List("snippet,statistics,contentDetails,liveStreamingDetails");
+        vidListRequest.Id = videoIds;
+        var videoResponse = await vidListRequest.ExecuteAsync();
+        return videoResponse.Items.ToList();
     }
 }

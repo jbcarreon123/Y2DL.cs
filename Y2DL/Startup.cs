@@ -19,11 +19,12 @@ using Y2DL.Services.DiscordCommandsService;
 using Y2DL.Utils;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using ChannelReleases = Y2DL.Services.ChannelReleases;
 using YoutubeService = Y2DL.Services.YoutubeService;
 
 namespace Y2DL;
 
-public class Program
+public class Startup
 {
     private readonly IServiceProvider _serviceProvider = CreateProvider();
     
@@ -34,7 +35,7 @@ public class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        new Program().RunAsync(args).GetAwaiter().GetResult();
+        new Startup().RunAsync(args).GetAwaiter().GetResult();
     }
 
     private static IServiceProvider CreateProvider()
@@ -72,15 +73,16 @@ public class Program
 
         var collection = new ServiceCollection()
             .AddDbContext<Y2dlDbContext>()
+            .AddScoped<YoutubeService>()
+            .AddSingleton<DynamicChannelInfo>()
+            .AddSingleton<ChannelReleases>()
             .AddSingleton(discordSocketConfig)
             .AddSingleton(appConfig)
             .AddSingleton(logger)
             .AddSingleton(youTubeServices)
             .AddSingleton<DiscordSocketClient>()
             .AddSingleton<InteractionService>()
-            .AddSingleton<YoutubeService>()
             .AddSingleton<CommandHandler>()
-            .AddSingleton<DynamicChannelInfo>()
             .AddSingleton<LoopService>()
             .AddSingleton<DatabaseManager>();
 

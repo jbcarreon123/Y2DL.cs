@@ -23,4 +23,14 @@ public static class ListExtensions
             return list[currentIndex + 1];
         }
     }
+    
+    public static void MoveFirstToLast<T>(this List<T> list)
+    {
+        if (list.Count > 1)
+        {
+            T firstItem = list[0];
+            list.RemoveAt(0);
+            list.Add(firstItem);
+        }
+    }
 }
