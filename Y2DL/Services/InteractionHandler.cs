@@ -36,6 +36,11 @@ public class InteractionHandler
         await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
     }
 
+    public async Task InitializePluginInteractionAsync(Assembly assembly)
+    {
+        await _commands.AddModulesAsync(assembly, _serviceProvider);
+    }
+
     public async Task RegisterAsync()
     {
         try
@@ -75,7 +80,7 @@ public class InteractionHandler
         try
         {
             ShardedInteractionContext ctx = new ShardedInteractionContext(_client, arg);
-            await _commands.ExecuteCommandAsync(ctx, null);
+            await _commands.ExecuteCommandAsync(ctx, _serviceProvider);
         }
         catch (Exception ex)
         {

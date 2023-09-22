@@ -65,6 +65,11 @@ namespace Y2DL.Models
             return listable.items;
         }
         
+        public static implicit operator Listable<T>(T item)
+        {
+            return new Listable<T>(item);
+        }
+        
         public static implicit operator Repeatable<T>(Listable<T> listable)
         {
             return listable.items;
@@ -78,6 +83,28 @@ namespace Y2DL.Models
         public static implicit operator Listable<T>(List<T> list)
         {
             return new Listable<T>(list);
+        }
+        
+        public T this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= items.Count)
+                {
+                    throw new IndexOutOfRangeException("Index is out of range.");
+                }
+
+                return items[index];
+            }
+            set
+            {
+                if (index < 0 || index >= items.Count)
+                {
+                    throw new IndexOutOfRangeException("Index is out of range.");
+                }
+
+                items[index] = value;
+            }
         }
     }
 }

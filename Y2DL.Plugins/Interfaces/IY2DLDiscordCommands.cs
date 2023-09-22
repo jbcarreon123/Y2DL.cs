@@ -1,6 +1,8 @@
-﻿namespace Y2DL.Plugins.Interfaces;
+﻿using Discord.Interactions;
+
+namespace Y2DL.Plugins.Interfaces;
 
 public interface IY2DLDiscordCommands
 {
-    void Initialize();
+    void ConfigureSlashCommands(ShardedInteractionContext context);
 }

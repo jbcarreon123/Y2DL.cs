@@ -52,11 +52,12 @@ public class LatestVideo
 [Keyless]
 public class Statistics
 {
-    public ulong Views { get; set; } = 0;
-    public ulong Likes { get; set; } = 0;
-    public ulong Comments { get; set; } = 0;
-    public ulong Subscribers { get; set; } = 0;
-    public ulong Videos { get; set; } = 0;
+    public ulong? Views { get; set; } = 0;
+    public ulong? Likes { get; set; } = 0;
+    public ulong? Comments { get; set; } = 0;
+    public ulong? Subscribers { get; set; } = 0;
+    public ulong? Videos { get; set; } = 0;
+    public ulong? ConcurrentLiveViewers { get; set; } = 0;
 
     public string? FormattedSubscribers => Subscribers.ToFormattedNumber();
 
@@ -67,4 +68,6 @@ public class Statistics
     public string? FormattedComments => Comments.ToFormattedNumber();
 
     public string? FormattedVideos => Videos.ToFormattedNumber();
+    
+    public string? FormattedConcurrentLiveViewers => ConcurrentLiveViewers.ToFormattedNumber();
 }

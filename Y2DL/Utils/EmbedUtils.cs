@@ -13,6 +13,22 @@ namespace Y2DL.Utils;
 
 public static class EmbedUtils
 {
+    public static Discord.Embed GenerateHelpEmbed()
+    {
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+        {
+            Title = "Help",
+            Description = "Please note that this bot uses only **slash commands**, but with exceptions:\r\n" +
+                          "Using the YouTubeInfo system also works in guilds if you mention this bot."
+        };
+
+        embedBuilder.AddField("/about (y2dl|bot)", "About Y2DL or the bot", true);
+        embedBuilder.AddField("/shards", "Get sharding information", true);
+        embedBuilder.AddField("/ytinfo (channel|playlist|video)", "Get info for youtube channel, playlist, or video", true);
+
+        return embedBuilder.Build();
+    }
+    
     public static EmbedBuilder ToDiscordEmbedBuilder(this Embeds embeds, YoutubeChannel channel)
     {
         try

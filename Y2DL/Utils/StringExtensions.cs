@@ -20,19 +20,35 @@ public static class StringExtensions
         return input.Substring(0, maxLength - 3) + "...";
     }
 
-    public static string GetYouTubeId(this string input)
+    public static (string? Id, string Type) GetYouTubeIdAndType(this string input)
     {
         var youtubeShortRegex = new Regex(@"youtu\.be/([a-zA-Z0-9_-]+)");
         var youtubeLongRegex = new Regex(@"v=([a-zA-Z0-9_-]+)");
         var playlistRegex = new Regex(@"list=([a-zA-Z0-9_-]+)");
+        var channelRegex = new Regex(@"channel/([a-zA-Z0-9_-]+)");
 
         Match match;
-        if ((match = youtubeShortRegex.Match(input)).Success) return match.Groups[1].Value;
 
-        if ((match = youtubeLongRegex.Match(input)).Success) return match.Groups[1].Value;
+        if ((match = youtubeShortRegex.Match(input)).Success)
+        {
+            return (match.Groups[1].Value, "Video");
+        }
 
-        if ((match = playlistRegex.Match(input)).Success) return match.Groups[1].Value;
+        if ((match = youtubeLongRegex.Match(input)).Success)
+        {
+            return (match.Groups[1].Value, "Video");
+        }
 
-        return null;
+        if ((match = playlistRegex.Match(input)).Success)
+        {
+            return (match.Groups[1].Value, "Playlist");
+        }
+
+        if ((match = channelRegex.Match(input)).Success)
+        {
+            return (match.Groups[1].Value, "Channel");
+        }
+
+        return (null, "Unknown");
     }
 }

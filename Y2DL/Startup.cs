@@ -6,6 +6,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
@@ -15,8 +16,10 @@ using Y2DL.Database;
 using Y2DL.Logging;
 using Y2DL.Models;
 using Y2DL.ServiceInterfaces;
+using Y2DL.Plugins;
+using Y2DL.Plugins.Interfaces;
 using Y2DL.Services;
-using Y2DL.Services.DiscordCommandsService;
+using Y2DL.Services.DiscordCommands;
 using Y2DL.SmartFormatters;
 using Y2DL.Utils;
 using YamlDotNet.Serialization;
@@ -40,10 +43,31 @@ public class Startup
         new Startup().RunAsync(args).GetAwaiter().GetResult();
     }
     
-    private static readonly int _numOfShards = 5;
+    private static readonly int _numOfShards = 1;
 
     private static IServiceProvider CreateProvider()
     {
+        var configFile = File.ReadAllText("Config/Y2DLConfig.yml");
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .WithTypeConverter(new YamlStringEnumConverter())
+            .Build();
+        var appConfig = deserializer.Deserialize<Config>(configFile);
+        
+        var logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.Discord(appConfig)
+            .CreateLogger();
+        
+        var asm = Assembly.GetExecutingAssembly();
+        var fileVersionInfo = FileVersionInfo.GetVersionInfo(asm.Location);
+        var version = fileVersionInfo.ProductVersion;
+        logger.Information("Y2DL v{0} (formerly as YTSCTD)", version);
+        logger.Information("This program comes with ABSOLUTELY NO WARRANTY!");
+        logger.Information("  > https://github.com/jbcarreon123/YTSCTD/blob/main/LICENSE");
+        
         var discordSocketConfig = new DiscordSocketConfig
         {
             AlwaysDownloadUsers = true,
@@ -54,20 +78,6 @@ public class Startup
             TotalShards = _numOfShards
         };
 
-        var configFile = File.ReadAllText("Config/Y2DLConfig.yml");
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(PascalCaseNamingConvention.Instance)
-            .WithTypeConverter(new YamlStringEnumConverter())
-            .Build();
-        var appConfig = deserializer.Deserialize<Config>(configFile);
-
-        var logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.Discord(appConfig)
-            .CreateLogger();
-
         List<YouTubeService> youTubeServices = new();
         foreach (var apiKey in appConfig.Main.ApiKeys)
             youTubeServices.Add(new YouTubeService(new BaseClientService.Initializer
@@ -75,7 +85,7 @@ public class Startup
                 ApiKey = apiKey.YoutubeApiKey,
                 ApplicationName = apiKey.YoutubeApiName
             }));
-
+        
         var collection = new ServiceCollection()
             .AddDbContext<Y2dlDbContext>()
             .AddScoped<YoutubeService>()
@@ -100,35 +110,21 @@ public class Startup
         var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
         var config = _serviceProvider.GetRequiredService<Config>();
         var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
-        
+        var database = _serviceProvider.GetRequiredService<DatabaseManager>();
         Log.Logger = _serviceProvider.GetRequiredService<Logger>();
 
-        var assembly = Assembly.GetExecutingAssembly();
-        var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-        var version = fileVersionInfo.ProductVersion;
-        await LogAsync(new LogMessage(LogSeverity.Info, "Y2DL", $"Y2DL v{version} (formerly as YTSCTD)"));
-        await LogAsync(new LogMessage(LogSeverity.Info, "Y2DL", "This program comes with ABSOLUTELY NO WARRANTY!"));
-        await LogAsync(new LogMessage(LogSeverity.Info, "Y2DL",
-            "  > https://github.com/jbcarreon123/YTSCTD/blob/main/LICENSE"));
+        await PluginManager.LoadPluginsAsync(commands, _serviceProvider);
 
-        if (version != config.Version)
-        {
-            await LogAsync(new LogMessage(LogSeverity.Warning, "Y2DL",
-                "The config file version is different than the program version"));
-            await LogAsync(new LogMessage(LogSeverity.Warning, "Y2DL",
-                "Update your config on https://jbcarreon123.github.io/y2dl/config"));
-        }
+        database.Configure();
 
         client.Log += LogAsync;
+        client.MessageReceived += MessageReceived;
         client.ShardReady += ReadyAsync;
         
         await commands.InitializeAsync();
 
         await client.LoginAsync(TokenType.Bot, config.Main.BotConfig.BotToken);
         await client.StartAsync();
-
-        await Task.Delay(5000);
-        await commands.RegisterAsync();
 
         await Task.Delay(Timeout.Infinite);
     }
@@ -141,10 +137,45 @@ public class Startup
         if (_readyShards >= _numOfShards)
         {
             var loopService = _serviceProvider.GetRequiredService<LoopService>();
+            var commands = _serviceProvider.GetRequiredService<InteractionHandler>();
             await loopService.StartAsync(CancellationToken.None);
+            await commands.RegisterAsync();
             Log.Information("All shards are now ready.");
-            return;
         }
+    }
+
+    private async Task MessageReceived(SocketMessage message)
+    {
+        var youtubeService = _serviceProvider.GetRequiredService<YoutubeService>();
+        var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
+
+        try
+        {
+            if (message is IUserMessage userMessage)
+            {
+                if (message.MentionedUsers.Any(x => x.Id == client.CurrentUser.Id))
+                {
+                    var idType = message.Content.GetYouTubeIdAndType();
+
+                    switch (idType.Type)
+                    {
+                        case "Video":
+                            await userMessage.ReplyAsync(embed: await youtubeService.GetVideoAsync(idType.Id));
+                            break;
+                        case "Playlist":
+                            await userMessage.ReplyAsync(embed: await youtubeService.GetPlaylistAsync(idType.Id));
+                            break;
+                        case "Channel":
+                            await userMessage.ReplyAsync(embed: await youtubeService.GetChannelAsync(idType.Id));
+                            break;
+                        default:
+                            await userMessage.ReplyAsync(embed: EmbedUtils.GenerateHelpEmbed());
+                            break;
+                    }
+                }
+            }
+        }
+        catch { }
     }
     
     private async Task LogAsync(LogMessage message)

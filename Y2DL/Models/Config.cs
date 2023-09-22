@@ -14,9 +14,16 @@ public class Main
     public AppType Type { get; set; }
     public BotConfig BotConfig { get; set; }
     public WebhookConfig WebhookConfig { get; set; }
+    public ChannelConfig ChannelConfig { get; set; }
     public int UpdateInterval { get; set; }
     public List<ApiKeys> ApiKeys { get; set; }
     public Logging Logging { get; set; }
+}
+
+public class ChannelConfig
+{
+    public bool EnableShorts { get; set; } = false;
+    public bool EnableStreams { get; set; } = false;
 }
 
 public class Logging
