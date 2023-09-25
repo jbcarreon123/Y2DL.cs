@@ -1,0 +1,124 @@
+# YouTube2DiscordLink (formerly YTSCTD) 2.0.0
+# Config File
+# For smooth operation, follow the instructions at https://jbcarreon123.github.io/docs/y2dl
+
+# DO NOT TOUCH THIS!
+Version: ""
+
+Main:
+  # Webhook or Bot
+  Type: ""
+
+  # If bot, configure this.
+  # If not, don't touch this.
+  BotConfig:
+    BotToken: ""
+    State: ""
+    Status:
+      Enabled: true
+      Status:
+        - Text: ""
+          
+  ChannelConfig:
+    EnableShorts: false
+    EnableStreams: false
+
+  WebhookConfig:
+    Name: ""
+    AvatarUrl: ""
+
+  # The update interval (in milliseconds)
+  UpdateInterval: ""
+
+  # Required at least 1 so it can get the info.
+  ApiKeys:
+    - YoutubeApiKey: ""
+      YoutubeApiName: ""
+
+  # Defines the log severity to shown in the console.
+  Logging:
+    LogLevel: ""
+    LogErrorChannel:
+      UseWebhook: ""
+      WebhookUrl: ""
+      GuildId: 0
+      ChannelId: 0
+
+Services:
+  DynamicChannelInfo:
+    Enabled: true
+    # Supports the full Discord Markdown (for Bots/Webhooks).
+    # {channel} for Channel Name, and {channelUrl} for channel's URL
+    # {lVidName} for latest video's title, {lVidThumbnail} for it's thumbnail,
+    # and {lVidUrl} for it's URL
+    # Go to https://jbcarreon123.github.io/docs/y2dl/message for more variables.
+    Messages:
+      - ChannelId: ""
+        Output:
+          # If you want to use a webhook instead of a bot, without using Webhook mode, set this to true.
+          # Note: ""
+          UseWebhook: ""
+          # The 2 things below is only used in Bot mode.
+          GuildId: ""
+          ChannelId: ""
+        Embed:
+          Title: ""
+          TitleUrl: ""
+          Description: ""
+            {Description:Limit(100)}
+          Color: ""
+          ImageUrl: ""
+          ThumbnailUrl: ""
+          Fields:
+            - Name: ""
+              Value: ""
+              Inline: ""
+
+  ChannelReleases:
+    Enabled: true
+    # Supports the full Discord Markdown (for Bots/Webhooks).
+    # {channel} for Channel Name, and {channelUrl} for channel's URL
+    # {lVidName} for latest video's title, {lVidThumbnail} for it's thumbnail,
+    # and {lVidUrl} for it's URL
+    # Go to https://jbcarreon123.github.io/docs/y2dl/message for more variables.
+    Messages:
+      - ChannelId: ""
+        Output:
+          # If you want to use a webhook instead of a bot, without using Webhook mode, set this to true.
+          UseWebhook: ""
+          # Only used in Webhook mode, or if you set UseWebhook to true.
+          WebhookUrl: ""
+          # The 2 things below is only used in Bot mode.
+          GuildId: ""
+          ChannelId: ""
+        Content: ""
+        Embed:
+          Author: ""
+          Title: ""
+          TitleUrl: ""
+          Description: ""
+          Color: ""
+          ImageUrl: ""
+
+  # Only works if Type is Bot. Else, it will be ignored.
+  DynamicChannelInfoForVoiceChannels:
+    Enabled: true
+    # {channel} for Channel Name, and {channelSubscribers} for subscibers.
+    # Go to https://jbcarreon123.github.io/docs/y2dl/voicechannels for more variables.
+    Channels:
+      - ChannelId: ""
+        VoiceChannels:
+          - GuildId: ""
+            ChannelId: ""
+            Name: ""
+          - GuildId: ""
+            ChannelId: ""
+            Name: ""
+          - GuildId: ""
+            ChannelId: ""
+            Name: ""
+  
+  # Only works if Type is Bot. Else, it will be ignored.
+  # Note that if you disable this, plugin's commands will also be disabled.
+  Commands:
+    Enabled: false
