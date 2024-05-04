@@ -1,4 +1,4 @@
-Y2DL will be going to it's 3rd major refactor. See it on [my server](https://discord.gg/P5ecFZNyCc).
+Y2DL (the C# version) is now discontinued.
 ---
 
 <img width="275" height="275" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="Images/Y2DL.png">  
